@@ -2,6 +2,7 @@ from sqlalchemy_serializer import SerializerMixin
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import validates
 from sqlalchemy.ext.associationproxy import association_proxy
+
 from config import db
 
 # Models go here!
@@ -27,9 +28,33 @@ class User(db.Model, SerializerMixin):
     # exclude user field in artworks relationship
     #exclude user field in discussion_posts and comments relationships
    
-   
+    @validates("username")
+    def validate_username(self, _, username):
+        if not isinstance(username, str):
+            raise TypeError("Username must be a string")
+        elif len(username) < 1:
+            raise ValueError("Username must be at least 1 character")
+        return username
     def __repr__(self):
         return f'<User(user_id={self.user_id}, username={self.username})>'
+    
+    @validates("email")
+    def validate_email(self, _, email):
+        if not isinstance(email, str):
+            raise TypeError("Email must be a string")
+        elif len(email) < 1:
+            raise ValueError("Email must be at least 1 character")
+        elif not "@" in email or not "." in email:
+            raise ValueError("Invalid email format")
+        return email
+    
+    @validates("password")
+    def validate_password(self, _, password):
+        if not isinstance(password, str):
+            raise TypeError("Password must be a string")
+        elif len(password) < 8:
+            raise ValueError("Password must be at least 8 characters")
+        return (password)
     
 class Artwork(db.Model, SerializerMixin):
     __tablename__ = 'artworks'
@@ -49,6 +74,19 @@ class Artwork(db.Model, SerializerMixin):
     #serialization rules
     serialize_rules = ("-user.artworks", "-artwork_tags.artwork") # exclude artworks field in user relationship
    
+    @validates("image_file_path")
+    def validate_image_file_path(self, _, image_file_path):
+        if not isinstance(image_file_path, str):
+            raise TypeError("Image file path must be a string")
+        elif not image_file_path:
+            raise ValueError("Image file path is required")
+        return image_file_path
+
+    @validates("artwork_tags")
+    def validate_artwork_tags(self, _, artwork_tags):
+        if not artwork_tags:
+            raise ValueError("At least one tag is required")
+        return artwork_tags
 
     def __repr__(self):
         return f'<Artwork(artwork_id={self.artwork_id}, title={self.title})>'
@@ -71,6 +109,18 @@ class DiscussionPost(db.Model, SerializerMixin):
     #serialize_rule
     serialize_rules = ("-user.discussion_posts")
     #exclude discussion_posts and comments fields in user relationships
+    
+    @validates("body")
+    def validate_body(self, _, body):
+        if not body or not isinstance(body, str):
+            raise ValueError("Body text is required")
+        return body
+    
+    @validates("post_tags")
+    def validate_post_tags(self, _, post_tags):
+        if not post_tags:
+            raise ValueError("At least one tag is required")
+        return post_tags
 
     def __repr__(self):
         return f'<DiscussionPost(post_id={self.post_id}, title={self.title})>'
