@@ -1,40 +1,102 @@
-import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import React, { createContext, useState, useEffect } from "react";
+import { Outlet } from "react-router-dom";
 import Header from "./Header";
-import Home from "./Home";
-import Search from "./Search";
-import Signup from "./Signup";
-import Profile from "./Profile";
-import Upload from "./Upload";
-import AboutUs from "./AboutUs";
+import AlertBar from "./AlertBar";
 
-function App() {
-   const [loading, setLoading] = useState(true);
+export const TagsContext = createContext();
 
-   useEffect(() => {
-     // Simulate a delay for demonstration purposes
-     const timeoutId = setTimeout(() => {
-       setLoading(false);
-     }, 3000);
+const App = ({ children }) => {
+  // State for displaying alerts
+  const [message, setMessage] = useState(null);
+  const [snackType, setSnackType] = useState("");
 
-     return () => clearTimeout(timeoutId);
-   }, []);
+  // State for managing user data
+  const [user, setUser] = useState(null);
+
+  // State for managing tags
+  const [tags, setTags] = useState([]);
+
+  // useEffect to check session and fetch user data
+  useEffect(() => {
+    fetch("/check_session")
+      .then((resp) => {
+        if (resp.ok) {
+          resp.json().then(setUser);
+        } else {
+          resp.json().then((errorObj) => {
+            handleSnackType("error");
+            setAlertMessage(errorObj.message);
+          });
+        }
+      })
+      .catch((errorObj) => {
+        handleSnackType("error");
+        setAlertMessage(errorObj.message);
+      });
+  }, []);
+
+  // useEffect to fetch tags from the backend
+  useEffect(() => {
+    const fetchTags = async () => {
+      try {
+        const response = await fetch("/tags"); // Adjust the endpoint accordingly
+        if (response.ok) {
+          const tagsData = await response.json();
+          setTags(tagsData);
+        }
+      } catch (error) {
+        console.error("Error fetching tags:", error);
+      }
+    };
+
+    fetchTags();
+  }, []);
+
+  // Function to update user data
+  const updateUser = (user) => {
+    setUser(user);
+  };
+
+  // Function to set alert message
+  const setAlertMessage = (msg) => {
+    setMessage(msg);
+  };
+
+  // Function to set snack type
+  const handleSnackType = (type) => {
+    setSnackType(type);
+  };
+
+  // Context object to be passed to Outlet
+  const ctx = {
+    user,
+    setAlertMessage,
+    handleSnackType,
+    updateUser,
+  };
+
   return (
-    <Router>
-      <div>
-        {loading ? <LoadingScreen /> : <YourMainContent />}
-        <Header />
-        <Switch>
-          <Route path="/search" component={Search} />
-          <Route path="/signup" component={Signup} />
-          <Route path="/profile" component={Profile} />
-          <Route path="/upload" component={Upload} />
-          <Route path="/about us" component={AboutUs} />
-          <Route path="/" component={Home} />
-        </Switch>
+    <div>
+      <Header
+        user={user}
+        updateUser={updateUser}
+        setAlertMessage={setAlertMessage}
+        handleSnackType={handleSnackType}
+      />
+      {message && (
+        <AlertBar
+          message={message}
+          snackType={snackType}
+          setAlertMessage={setAlertMessage}
+          handleSnackType={handleSnackType}
+        />
+      )}
+      <div id="outlet">
+        <Outlet context={ctx} />
       </div>
-    </Router>
+      <TagsContext.Provider value={{ tags }}>{children}</TagsContext.Provider>
+    </div>
   );
-}
+};
 
 export default App;
