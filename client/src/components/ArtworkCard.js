@@ -1,16 +1,15 @@
 import { Link } from "react-router-dom";
 
-const Card = ({ image, title, description, difficulty, id }) => {
+const ArtworkCard = ({ image, title, id, tags }) => {
   return (
     <div className="card">
       <img src={image} alt={title} />
       <div className="details">
         <h2>{title}</h2>
         <div className="hidden">
-          <p>{description}</p>
-          <p className="subtle">{difficulty}</p>
-          <Link to={`/crafts/${id}`}>
-            <button>Learn more</button>
+          <p>Tags: {tags.join(", ")}</p>
+          <Link to={`/artworks/${id}`}>
+            <button>View Artwork</button>
           </Link>
         </div>
       </div>
@@ -18,4 +17,4 @@ const Card = ({ image, title, description, difficulty, id }) => {
   );
 };
 
-export default Card;
+export default ArtworkCard;
