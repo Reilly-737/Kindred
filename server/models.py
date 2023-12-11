@@ -35,18 +35,16 @@ class User(db.Model, SerializerMixin):
         elif len(username) < 1:
             raise ValueError("Username must be at least 1 character")
         return username
-    def __repr__(self):
-        return f'<User(user_id={self.user_id}, username={self.username})>'
     
     @validates("email")
     def validate_email(self, _, email):
-        if not isinstance(email, str):
+       if not isinstance(email, str):
             raise TypeError("Email must be a string")
-        elif len(email) < 1:
-            raise ValueError("Email must be at least 1 character")
-        elif not "@" in email or not "." in email:
+       elif len(email) < 1:
+           raise ValueError("Email must be at least 1 character")
+       elif not "@" in email or not "." in email:
             raise ValueError("Invalid email format")
-        return email
+       return email
     
     @validates("password")
     def validate_password(self, _, password):
@@ -55,7 +53,8 @@ class User(db.Model, SerializerMixin):
         elif len(password) < 8:
             raise ValueError("Password must be at least 8 characters")
         return (password)
-    
+    def __repr__(self):
+       return f'<User(user_id={self.user_id}, username={self.username})>'
 class Artwork(db.Model, SerializerMixin):
     __tablename__ = 'artworks'
    

@@ -1,4 +1,3 @@
-//FormComp mode="login" />;
 import { useState } from "react";
 import { useNavigate, Link, useOutletContext } from "react-router-dom";
 
@@ -15,6 +14,7 @@ const Login = () => {
       ...credentials,
       [e.target.name]: e.target.value,
     });
+   console.log(credentials);
   };
 
   const handleSubmit = async (e) => {

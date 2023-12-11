@@ -2,5 +2,8 @@
   "devDependencies": {
     "eslint": "^8.55.0",
     "eslint-config-react-app": "^7.0.1"
+  },
+  "dependencies": {
+    "bootstrap": "^5.3.2"
   }
 }

@@ -6,7 +6,7 @@ import Login from "./Login";
 import Profile from "./Profile";
 import AboutUs from "./AboutUs";
 import ErrorPage from "./ErrorPage";
-
+import SearchForm from "./Search";
 const routes = [
   {
     path: "/",
@@ -37,6 +37,10 @@ const routes = [
         {
             path: "/profile/:user_id",
             element: <Profile/>,
+        },
+        {
+            path: "/search",
+            element: <SearchForm/>,
         }
     ],
   },

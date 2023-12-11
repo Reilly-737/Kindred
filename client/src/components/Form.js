@@ -1,30 +1,28 @@
-import { Formik, Field, Form, ErrorMessage } from 'formik';
-import { useEffect, useState } from 'react';
-import { useNavigate, useOutletContext } from 'react-router-dom';
-import * as Yup from 'yup';
+import { Formik, Field, Form, ErrorMessage } from "formik";
+import { useEffect, useState } from "react";
+import { useNavigate, useOutletContext } from "react-router-dom";
+import * as Yup from "yup";
 
 const FormComp = ({ mode = "signup", onSubmit }) => {
-  const { user, updateUser, setAlertMessage, handleSnackType } =useOutletContext();
+  const { user, updateUser, setAlertMessage, handleSnackType } =
+    useOutletContext();
   const [userInfo, setUserInfo] = useState({});
-
   const navigate = useNavigate();
 
   const url = user ? `/users/${userInfo.id}` : "/register";
-  const redirectAfterLogin = user ? "/" : "/upload"; // Redirect to home for login, /upload for signup
+  const redirectAfterLogin = user ? "/" : "/upload";
 
   useEffect(() => {
     if (user) {
       fetch(`/users/${user.id}`)
         .then((resp) => {
           if (resp.ok) {
-            resp.json().then(setUserInfo);
+            return resp.json();
           } else {
-            resp.json().then((err) => {
-              handleSnackType("error");
-              setAlertMessage(err.message);
-            });
+            throw new Error(resp.statusText);
           }
         })
+        .then(setUserInfo)
         .catch((err) => {
           handleSnackType("error");
           setAlertMessage(err.message);
@@ -41,12 +39,21 @@ const FormComp = ({ mode = "signup", onSubmit }) => {
         password: "",
       }}
       validationSchema={Yup.object({
-        username: Yup.string().min(3, "Must be at least 3 characters").required("Required"),
+        username: Yup.string()
+          .min(3, "Must be at least 3 characters")
+          .required("Required"),
         email: Yup.string().email("Invalid email address").required("Required"),
-        bio: Yup.string().min(50, "Must be at least 50 characters").required("Required"),
-        password: mode === "signup" ? Yup.string().min(8, "Must be at least 8 characters").required("Required") : Yup.string(),
+        bio: Yup.string()
+          .min(50, "Must be at least 50 characters")
+          .required("Required"),
+        password:
+          mode === "signup"
+            ? Yup.string()
+                .min(8, "Must be at least 8 characters")
+                .required("Required")
+            : Yup.string(),
       })}
-      onSubmit={(values, {setSubmitting}) => {
+      onSubmit={(values, { setSubmitting }) => {
         fetch(url, {
           method: "POST",
           headers: {
@@ -58,16 +65,14 @@ const FormComp = ({ mode = "signup", onSubmit }) => {
             if (resp.ok) {
               return resp.json();
             } else {
-              return resp.json().then((error) => {
-                throw error;
-              });
+              throw new Error(resp.statusText);
             }
           })
           .then((newUser) => {
             updateUser(newUser);
             handleSnackType("success");
             setAlertMessage(
-              "Welcome! We are so excited to have you here!" ,
+              "Welcome! We are so excited to have you here!",
               "A fun surprise when you post your art for the first time, your art will be displayed on the front page for 24 hours!",
               "Can't wait to see your work!"
             );
@@ -105,7 +110,6 @@ const FormComp = ({ mode = "signup", onSubmit }) => {
             </>
           )}
         </div>
-
         <div className="buttons">
           <button type="submit">
             {mode === "signup" ? "Sign Up" : "Login"}

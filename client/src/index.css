@@ -44,3 +44,59 @@ body {
   background-color: #6fb07f; /* Adjust the color for the mobile menu icon */
 }
 
+.home-container {
+  text-align: center;
+}
+
+.posts-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.artwork-posts,
+.discussion-posts {
+  width: 45%; /* Adjust the width as needed */
+  text-align: left;
+}
+/* Home.css */
+.home-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.new-artists-cards {
+  margin-top: 20px;
+}
+
+.artist-cards {
+  display: flex;
+  gap: 20px;
+}
+
+.artist-card img {
+  max-width: 100px;
+  border-radius: 50%;
+}
+
+.artwork-discussion-lists {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.artwork-discussion-list {
+  flex: 1;
+}
+
+.artwork-discussion-list h2 {
+  margin-bottom: 10px;
+}
+
+.artwork-discussion-list ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.artwork-discussion-list li {
+  margin-bottom: 8px;
+}

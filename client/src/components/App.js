@@ -77,6 +77,7 @@ const App = ({ children }) => {
 
   return (
     <div>
+    
       <Header
         user={user}
         updateUser={updateUser}
