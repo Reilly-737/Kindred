@@ -1,36 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
+import { Container, Row, Col } from "react-bootstrap";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
-
-const Alert = React.forwardRef((props, ref) => (
-  <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
-));
-
-const AlertBar = ({ message, setAlertMessage, snackType, handleSnackType }) => {
-  const [open, setOpen] = useState(true);
-
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpen(false);
-    setAlertMessage(null);
-    handleSnackType("");
-  };
-
-  return (
-    <Snackbar open={open} autoHideDuration={5000} onClose={handleClose}>
-      <Alert onClose={handleClose} severity={snackType} sx={{ width: "100%" }}>
-        {message}
-      </Alert>
-    </Snackbar>
-  );
-};
+import ArtworkCard from "./ArtworkCard";
+import PostCard from "./PostCard";
+import UploadForm from "./UploadForm";
+import AlertBar from "./AlertBar";
 
 const Upload = () => {
   const navigate = useNavigate();
-  const { user, setAlertMessage, handleSnackType, tags } = useOutletContext();
+  const { user, setAlertMessage, handleSnackType } = useOutletContext();
+  const [tags, setTags] = useState([]);
   const [uploadData, setUploadData] = useState({
     title: "",
     body: "",
@@ -39,45 +20,44 @@ const Upload = () => {
     postType: "artwork",
   });
   const [showLoginAlert, setShowLoginAlert] = useState(!user);
+  const [uploadedId, setUploadedId] = useState(null);
 
   useEffect(() => {
     setShowLoginAlert(!user);
+    const fetchTags = async () => {
+      try {
+        const response = await fetch("/tags");
+        if (response.ok) {
+          const tagsData = await response.json();
+          setTags(tagsData);
+        } else {
+          throw new Error("Failed to fetch tags");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchTags();
   }, [user]);
 
-  const handleChange = (e) => {
-    setUploadData({
-      ...uploadData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleTagChange = (e) => {
-    const selectedTags = Array.from(e.target.selectedOptions, (option) =>
-      parseInt(option.value, 10)
-    );
-
-    setUploadData({
-      ...uploadData,
-      tags: selectedTags.slice(0, 3),
-    });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  const handleFormSubmit = async (values, { setSubmitting }) => {
     try {
       const endpoint =
-        uploadData.postType === "artwork" ? "/artworks" : "/discussion-posts";
+        values.postType === "artwork" ? "/artworks" : "/discussion-posts";
 
       const response = await fetch(endpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(uploadData),
+        body: JSON.stringify(values),
       });
 
       if (response.ok) {
+        const responseData = await response.json();
+        setUploadedId(responseData.id);
+
         handleSnackType("success");
         setAlertMessage("Upload successful!");
         navigate(`/profile/${user.id}`);
@@ -91,65 +71,39 @@ const Upload = () => {
       handleSnackType("error");
       setAlertMessage("An error occurred during upload.");
       setShowLoginAlert(!user);
+    } finally {
+      setSubmitting(false);
     }
   };
 
   return (
-    <div>
-      {user ? (
-        <form onSubmit={handleSubmit}>
-          <label>Title</label>
-          <input
-            type="text"
-            name="title"
-            value={uploadData.title}
-            onChange={handleChange}
+    <Container>
+      <Row className="mt-4">
+        <Col md={{ span: 6, offset: 3 }}>
+          <UploadForm
+            onSubmit={handleFormSubmit}
+            tags={tags}
+            showLoginAlert={showLoginAlert}
           />
-
-          {uploadData.postType === "discussion" && (
-            <>
-              <label>Body</label>
-              <textarea
-                name="body"
-                value={uploadData.body}
-                onChange={handleChange}
-              />
-            </>
-          )}
-
-          <label>Image File Path</label>
-          <input
-            type="text"
-            name="image_file_path"
-            value={uploadData.image_file_path}
-            onChange={handleChange}
-          />
-          <label>Tags (Select up to 3)</label>
-          <select
-            multiple
-            name="tags"
-            value={uploadData.tags}
-            onChange={handleTagChange}
-          >
-            {tags.map((tag) => (
-              <option value={tag.id} key={tag.id}>
-                {tag.title}
-              </option>
-            ))}
-          </select>
-          <label>Post Type</label>
-          <select
-            name="postType"
-            value={uploadData.postType}
-            onChange={handleChange}
-          >
-            <option value="artwork">Artwork</option>
-            <option value="discussion">Discussion Post</option>
-          </select>
-
-          <button type="submit">Upload</button>
-        </form>
-      ) : (
+        </Col>
+      </Row>
+      {uploadData.postType === "artwork" && uploadedId && (
+        <ArtworkCard
+          image={uploadData.image_file_path}
+          title={uploadData.title}
+          id={uploadedId}
+          tags={uploadData.tags}
+        />
+      )}
+      {uploadData.postType === "discussion" && uploadedId && (
+        <PostCard
+          title={uploadData.title}
+          id={uploadedId}
+          tags={uploadData.tags}
+          body={uploadData.body}
+        />
+      )}
+      {showLoginAlert && (
         <AlertBar
           message="Hey! Please login or sign up before uploading."
           setAlertMessage={setAlertMessage}
@@ -157,7 +111,7 @@ const Upload = () => {
           handleSnackType={handleSnackType}
         />
       )}
-    </div>
+    </Container>
   );
 };
 

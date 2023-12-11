@@ -31,8 +31,8 @@ def index():
 class AuthenticatedResource(Resource):
     def check_authentication(self):
         if 'user_id' not in session:
-            abort(401, message='User not logged in')
-
+            abort(401, description='User not logged in')
+        
 class UserById(AuthenticatedResource):
     def get(self, user_id):
         requested_user_id = int(user_id)
@@ -352,6 +352,7 @@ class Tags(AuthenticatedResource):
         return tag_list, 200
 
 api.add_resource(Tags, "/tags")
+
 class Search(AuthenticatedResource):
     def get(self):
         self.check_authentication()
