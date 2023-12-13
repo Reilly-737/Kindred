@@ -70,6 +70,19 @@ class Artwork(db.Model, SerializerMixin):
     tags = association_proxy('artwork_tag', 'tag')
     user = db.relationship('User', back_populates='artworks')
 
+    #trying out a custom to_dict method to try to stop recursion 
+    #def to_dict(self):
+        #data = super(Artwork, self).to_dict(
+           #serialize_only=(
+                #'artwork_id',
+                #'title',
+               # 'created_at',
+               # 'updated_at',
+                #'image_file_path',
+                #'user_id'
+            #)
+       #)
+       # return data # trying to specify exactly what I want 
     #serialization rules
     serialize_rules = ("-user.artworks", "-artwork_tags.artwork") # exclude artworks field in user relationship
    
@@ -170,8 +183,8 @@ class ArtworkTag(db.Model, SerializerMixin):
     artwork = db.relationship('Artwork', back_populates='artwork_tags')
     tag = db.relationship('Tag', back_populates='artwork_tags')
     #serialization rules
-    serialize_rules = ("-artwork.tag",) #exclude tag field in artwork relationship
-   
+    serialize_rules = ("-artwork.tag","-tag.artwork_tags") #exclude tag field in artwork relationship
+                                                            # trying -tag.artwork_tag for circular issues excluding tag field in artwork relationship  
     def __repr__(self):
         return f'<ArtworkTag(tag_id={self.tag_id}, artwork_id={self.artwork_id})>'
 
@@ -184,4 +197,5 @@ class PostTag(db.Model, SerializerMixin):
     tag = db.relationship('Tag', back_populates='post_tags')
    
     #serialization rules
-    serialize_rules = ("-post.tag",) #exclude tag field in post relationship
+    serialize_rules = ("-post.tag", "-tag.post_tags") #exclude tag field in post relationship
+                                                     #trying -tag.post_tags for circular issues excluding tag in post relationship

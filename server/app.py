@@ -3,6 +3,7 @@ from flask import Flask, request, abort
 from flask_restful import Api, Resource, reqparse
 from flask_sqlalchemy import SQLAlchemy
 from flask import session
+from flask import jsonify
 from sqlalchemy.orm.exc import NoResultFound
 from flask_bcrypt import Bcrypt
 from sqlalchemy import or_
@@ -31,8 +32,16 @@ def index():
 class AuthenticatedResource(Resource):
     def check_authentication(self):
         if 'user_id' not in session:
-            abort(401, description='User not logged in')
-        
+            abort(401, description='User not logged in')      
+class Users(Resource):
+    def get(self):
+        try:
+            users = User.query.all()
+            user_list = [user.to_dict() for user in users]
+            return {'users': user_list}, 200
+        except Exception as e:
+            return {'error': str(e)}, 500
+api.add_resource(Users, "/users")
 class UserById(AuthenticatedResource):
     def get(self, user_id):
         requested_user_id = int(user_id)
@@ -136,7 +145,6 @@ api.add_resource(Logout, '/logout')
 
 class Artworks(AuthenticatedResource):
     def get(self):
-        self.check_authentication()
         try:
             artworks = [artwork.to_dict() for artwork in Artwork.query.all()]
             return artworks, 200
@@ -156,14 +164,13 @@ class Artworks(AuthenticatedResource):
                 user_id=user_id
             )
             db.session.add(new_artwork)
+            db.session.flush()
             db.session.commit()
-            for tag_name in tags:
-                tag = Tag.query.filter_by(name=tag_name).first()
-                if not tag: 
-                    tag = Tag(name=tag_name)
-                    db.session.add(tag)
-                artwork_tag = ArtworkTag(artwork=new_artwork, tag_id=tag.tag_id)
-                db.session.add(artwork_tag)
+            for tag_id in tags:
+                tag = Tag.query.get(tag_id)
+                if  tag: 
+                    artwork_tag = ArtworkTag(artwork=new_artwork, tag=tag)
+                    db.session.add(artwork_tag)
             db.session.commit()
             return new_artwork.to_dict(), 201
         except Exception as e: 
@@ -172,9 +179,8 @@ class Artworks(AuthenticatedResource):
         
 api.add_resource(Artworks, "/artworks")
 
-class ArtworkById(AuthenticatedResource):
+class ArtworkById(Resource):
     def get(self, artwork_id):
-        self.check_authentication()
         try: 
             artwork = Artwork.query.get_or_404(artwork_id, description=f"Artwork {artwork_id} not found" )
             return artwork.to_dict(), 200
@@ -226,7 +232,6 @@ api.add_resource(EditArtwork, "/artworks/<int:artwork_id>")
 
 class DiscussionPosts(AuthenticatedResource):
     def get(self):
-        self.check_authentication()
         try:
             discussion_posts = [post.to_dict() for post in DiscussionPost.query.all()]
             return discussion_posts, 200
@@ -252,8 +257,14 @@ class DiscussionPosts(AuthenticatedResource):
                 user_id=user_id
             )
             db.session.add(new_post)
+            db.session.flush()
+            
+            for tag_id in post_tags:
+                tag = Tag.query.get(tag_id)
+                if tag: 
+                    post_tag = PostTag(post=new_post, tag=tag)
+                    db.session.add(post_tag)
             db.session.commit()
-
             return new_post.to_dict(), 201
         except Exception as e:
             db.session.rollback()
@@ -261,9 +272,8 @@ class DiscussionPosts(AuthenticatedResource):
         
 api.add_resource(DiscussionPosts, "/discussion-posts")
 
-class DiscussionPostById(AuthenticatedResource):
+class DiscussionPostById(Resource):
     def get(self, post_id):
-        self.check_authentication()
         try:
             discussion_post = DiscussionPost.query.get_or_404(post_id, description=f"Discussion Post {post_id} not found!")
             comments = [comment.to_dict() for comment in discussion_post.comments]
@@ -344,18 +354,17 @@ class DeleteComment(AuthenticatedResource):
             return {'message': str(e)}, 400
 api.add_resource(DeleteComment, '/comments/<int:comment_id>')
 
-class Tags(AuthenticatedResource):
+class Tags(Resource):
     def get(self):
-        self.check_authentication()
         tags = Tag.query.all()
         tag_list = [tag.to_dict() for tag in tags]
         return tag_list, 200
 
 api.add_resource(Tags, "/tags")
 
-class Search(AuthenticatedResource):
+class Search(Resource):
     def get(self):
-        self.check_authentication()
+
         query = request.args.get('query')
         if not query:
             return {'error': 'Query parameter "query" is required'}, 400
@@ -430,6 +439,20 @@ class NewestArt(Resource):
             return {'error': str(e)}, 500
 
 api.add_resource(NewestArt, '/newestArt')
+class NewestPostsResource(Resource):
+    def get(self):
+        try:
+            artwork_posts = Artwork.query.order_by(Artwork.created_at.desc()).limit(5).all()
+            discussion_posts = DiscussionPost.query.order_by(DiscussionPost.created_at.desc()).limit(5).all()
+
+            all_posts = sorted(artwork_posts + discussion_posts, key=lambda post: post.created_at, reverse=True)
+            posts_data = [post.to_dict() for post in all_posts]
+
+            return jsonify(posts_data), 200
+        except Exception as e:
+            return {'error': str(e)}, 500
+
+api.add_resource(NewestPostsResource, '/newestPosts')
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)

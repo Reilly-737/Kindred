@@ -99,8 +99,8 @@ const Upload = () => {
         <PostCard
           title={uploadData.title}
           id={uploadedId}
-          tags={uploadData.tags}
           body={uploadData.body}
+          tags={uploadData.tags}
         />
       )}
       {showLoginAlert && (

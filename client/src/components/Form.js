@@ -10,7 +10,7 @@ const FormComp = ({ mode = "signup", onSubmit }) => {
   const navigate = useNavigate();
 
   const url = user ? `/users/${userInfo.id}` : "/register";
-  const redirectAfterLogin = user ? "/" : "/upload";
+  //const redirectAfterLogin = user ? "/" : "/upload";
 
   useEffect(() => {
     if (user) {
@@ -76,8 +76,8 @@ const FormComp = ({ mode = "signup", onSubmit }) => {
               "A fun surprise when you post your art for the first time, your art will be displayed on the front page for 24 hours!",
               "Can't wait to see your work!"
             );
-            onSubmit(); // Trigger the onSubmit prop
-            navigate(redirectAfterLogin);
+            onSubmit(); 
+            navigate(user ? `/profile/${newUser.id}` : "/upload");
           })
           .catch((error) => {
             handleSnackType("error");

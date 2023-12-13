@@ -13,35 +13,35 @@ const routes = [
     element: <App />,
     errorElement: <ErrorPage />,
     children: [
-        {
-            path: "/",
-            index: true,
-            element:<Home />,
-        },
-        {
-            path: "/signup",
-            element: <Signup/>,
-        },
-        {
-            path: "/login",
-            element: <Login/>,
-        },
-        {
-            path: "/upload",
-            element: <Upload />,
-        },
-        {
-            path: "/aboutus",
-            element: <AboutUs />,
-        },
-        {
-            path: "/profile/:user_id",
-            element: <Profile/>,
-        },
-        {
-            path: "/search",
-            element: <SearchForm/>,
-        }
+      {
+        path: "/",
+        index: true,
+        element: <Home />,
+      },
+      {
+        path: "/signup",
+        element: <Signup />,
+      },
+      {
+        path: "/login",
+        element: <Login />,
+      },
+      {
+        path: "/upload",
+        element: <Upload />,
+      },
+      {
+        path: "/aboutus",
+        element: <AboutUs />,
+      },
+      {
+        path: "/profile/:user_id", 
+        element: <Profile />,
+      },
+      {
+        path: "/search",
+        element: <SearchForm />,
+      },
     ],
   },
 ];

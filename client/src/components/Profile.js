@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useOutletContext, useNavigate, useParams } from "react-router-dom";
+import { useOutletContext, useNavigate, useParams, Link } from "react-router-dom";
 
 const Profile = () => {
-  const { id } = useParams();
+  const { user_id: id = "" } = useParams();
   const { user, updateUser, setAlertMessage, handleSnackType} =
     useOutletContext();
   const [userInfo, setUserInfo] = useState({});

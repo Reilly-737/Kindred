@@ -1,19 +1,18 @@
 import React from "react";
 import { Navbar, NavbarBrand, Nav, NavItem, NavLink } from "reactstrap";
 import { NavLink as RouterNavLink } from "react-router-dom";
-import {useNavigate} from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 
 const Header = ({ user, updateUser, setAlertMessage, handleSnackType }) => {
   const navigate = useNavigate();
   const handleLogout = () => {
-  
-     fetch("/logout", { method: "DELETE" })
+    fetch("/logout", { method: "DELETE" })
       .then(() => {
-         updateUser(null);
+        updateUser(null);
         navigate("/");
       })
-     .catch((err) => {
-         handleSnackType("error");
+      .catch((err) => {
+        handleSnackType("error");
         setAlertMessage(err.message);
       });
   };
@@ -38,14 +37,17 @@ const Header = ({ user, updateUser, setAlertMessage, handleSnackType }) => {
           </NavItem>
           <NavItem>
             <NavLink
-              tag={RouterNavLink} to="/aboutus"className="custom-button">
+              tag={RouterNavLink}
+              to="/aboutus"
+              className="custom-button"
+            >
               about
             </NavLink>
           </NavItem>
           <NavItem>
-          <NavLink tag={RouterNavLink} to="/upload" className="custom-button">
-            upload
-          </NavLink>
+            <NavLink tag={RouterNavLink} to="/upload" className="custom-button">
+              upload
+            </NavLink>
           </NavItem>
           {user ? (
             <NavItem>

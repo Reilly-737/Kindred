@@ -6,17 +6,11 @@ import AlertBar from "./AlertBar";
 export const TagsContext = createContext();
 
 const App = ({ children }) => {
-  // State for displaying alerts
   const [message, setMessage] = useState(null);
   const [snackType, setSnackType] = useState("");
-
-  // State for managing user data
   const [user, setUser] = useState(null);
-
-  // State for managing tags
   const [tags, setTags] = useState([]);
 
-  // useEffect to check session and fetch user data
   useEffect(() => {
     fetch("/check_session")
       .then((resp) => {
@@ -35,11 +29,10 @@ const App = ({ children }) => {
       });
   }, []);
 
-  // useEffect to fetch tags from the backend
   useEffect(() => {
     const fetchTags = async () => {
       try {
-        const response = await fetch("/tags"); // Adjust the endpoint accordingly
+        const response = await fetch("/tags"); 
         if (response.ok) {
           const tagsData = await response.json();
           setTags(tagsData);
@@ -52,22 +45,17 @@ const App = ({ children }) => {
     fetchTags();
   }, []);
 
-  // Function to update user data
   const updateUser = (user) => {
     setUser(user);
   };
-
-  // Function to set alert message
   const setAlertMessage = (msg) => {
     setMessage(msg);
   };
 
-  // Function to set snack type
   const handleSnackType = (type) => {
     setSnackType(type);
   };
 
-  // Context object to be passed to Outlet
   const ctx = {
     user,
     setAlertMessage,

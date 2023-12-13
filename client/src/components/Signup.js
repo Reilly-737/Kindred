@@ -6,7 +6,7 @@ const Signup = () => {
     const [isSubmitted, setIsSubmitted] = useState(false)
 
     const handleFormSubmit =() => {
-        //logic here
+        //logic here for confetti
         setIsSubmitted(true)
     }
   return (

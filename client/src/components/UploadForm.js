@@ -1,7 +1,7 @@
 import React from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { Button, Dropdown } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 
 const UploadForm = ({ onSubmit, tags, showLoginAlert }) => {
   return (
@@ -17,11 +17,11 @@ const UploadForm = ({ onSubmit, tags, showLoginAlert }) => {
         title: Yup.string().required("Required"),
         body: Yup.string().when("postType", {
           is: "discussion",
-          then: Yup.string().required("Required"),
+          then: (schema) => schema.required("Required"),
         }),
         image_file_path: Yup.string().when("postType", {
           is: "artwork",
-          then: Yup.string().required("Required"),
+          then: (schema) => schema.required("Required"),
         }),
         tags: Yup.array()
           .min(1, "Choose at least one tag")
@@ -73,28 +73,16 @@ const UploadForm = ({ onSubmit, tags, showLoginAlert }) => {
             <label htmlFor="tags" className="form-label">
               Tags
             </label>
-            <Field
-              as={Dropdown}
-              name="tags"
-              className="block"
-              onSelect={(selectedTags) => setFieldValue("tags", selectedTags)}
-            >
-              <Dropdown.Toggle variant="success" id="dropdown-basic">
-                Select Tags
-              </Dropdown.Toggle>
-              <Dropdown.Menu>
-                {tags.map((tag) => (
-                  <Dropdown.Item key={tag.tag_id} eventKey={tag.tag_id}>
-                    {tag.title}
-                  </Dropdown.Item>
-                ))}
-              </Dropdown.Menu>
+            <Field as="select" name="tags" className="form-control" multiple>
+              {tags.map((tag) => (
+                <option key={tag.tag_id} value={tag.tag_id}> {tag.title} </option>
+              ))}
             </Field>
-            <ErrorMessage name="tags" className="text-danger" />
+            <ErrorMessage name="tags" component="div" className="text-danger" />
           </div>
           <div className="mb-3">
             <Button type="submit" disabled={showLoginAlert}>
-              Upload
+              Create!
             </Button>
           </div>
         </Form>
