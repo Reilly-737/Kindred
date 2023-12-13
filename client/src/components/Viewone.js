@@ -33,7 +33,7 @@ const ViewOne = () => {
       <h1>{item.title}</h1>
       {/* Render other details based on the type (artwork/discussion) */}
       {type === "artwork" && (
-        <img src={item.image_file_path} alt={item.title} />
+        <img src={item.image_url} alt={item.title} />
       )}
       {type === "discussion" && (
         <div>
@@ -46,3 +46,4 @@ const ViewOne = () => {
 };
 
 export default ViewOne;
+

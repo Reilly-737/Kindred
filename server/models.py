@@ -62,7 +62,7 @@ class Artwork(db.Model, SerializerMixin):
     title = db.Column(db.String(100), nullable=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
-    image_file_path = db.Column(db.String(255))
+    image_url = db.Column(db.String(255))
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
     #tag_id = db.Column(db.Integer, db.ForeignKey('tags.tag_id'))
     # Relationships
@@ -78,7 +78,7 @@ class Artwork(db.Model, SerializerMixin):
                 #'title',
                # 'created_at',
                # 'updated_at',
-                #'image_file_path',
+                #'image_url',
                 #'user_id'
             #)
        #)
@@ -86,13 +86,13 @@ class Artwork(db.Model, SerializerMixin):
     #serialization rules
     serialize_rules = ("-user.artworks", "-artwork_tags.artwork") # exclude artworks field in user relationship
    
-    @validates("image_file_path")
-    def validate_image_file_path(self, _, image_file_path):
-        if not isinstance(image_file_path, str):
-            raise TypeError("Image file path must be a string")
-        elif not image_file_path:
-            raise ValueError("Image file path is required")
-        return image_file_path
+    @validates("image_url")
+    def validate_image_url(self, _, image_url):
+        if not isinstance(image_url, str):
+            raise TypeError("Image URL must be a string")
+        elif not image_url:
+            raise ValueError("Image URL is required")
+        return image_url
 
     @validates("artwork_tags")
     def validate_artwork_tags(self, _, artwork_tags):

@@ -36,11 +36,7 @@ const Header = ({ user, updateUser, setAlertMessage, handleSnackType }) => {
             </NavLink>
           </NavItem>
           <NavItem>
-            <NavLink
-              tag={RouterNavLink}
-              to="/aboutus"
-              className="custom-button"
-            >
+            <NavLink tag={RouterNavLink} to="/aboutus" className="custom-button">
               about
             </NavLink>
           </NavItem>
@@ -51,32 +47,20 @@ const Header = ({ user, updateUser, setAlertMessage, handleSnackType }) => {
           </NavItem>
           {user ? (
             <NavItem>
-              <NavLink
-                tag={RouterNavLink}
-                to={`/profile/${user.id}`}
-                className="custom-button"
-              >
+              <NavLink tag={RouterNavLink} to={`/profile/${user.id}`} className="custom-button">
                 profile
               </NavLink>
             </NavItem>
           ) : (
             <NavItem>
-              <NavLink
-                tag={RouterNavLink}
-                to="/login"
-                className="custom-button"
-              >
+              <NavLink tag={RouterNavLink} to="/login" className="custom-button">
                 login
               </NavLink>
             </NavItem>
           )}
           {user && (
             <NavItem>
-              <NavLink
-                tag="button"
-                onClick={handleLogout}
-                className="custom-button"
-              >
+              <NavLink tag="button" onClick={handleLogout} className="custom-button">
                 logout
               </NavLink>
             </NavItem>

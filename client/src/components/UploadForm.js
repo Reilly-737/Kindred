@@ -3,6 +3,31 @@ import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { Button } from "react-bootstrap";
 
+function getValidationSchema(values) {
+  let schema = Yup.object({
+    title: Yup.string().required("Required"),
+    body: Yup.string(),
+    image_file: Yup.mixed(),
+    tags: Yup.array()
+      .min(1, "Choose at least one tag")
+      .of(Yup.number().typeError("Must be a number").required("Required")),
+  });
+
+  if (values.postType === "discussion") {
+    schema = schema.shape({
+      body: Yup.string().required("Required"),
+    });
+  }
+
+  if (values.postType === "artwork") {
+    schema = schema.shape({
+      image_file: Yup.mixed().required("A file is required for artwork"),
+    });
+  }
+
+  return schema;
+}
+
 const UploadForm = ({ onSubmit, tags, showLoginAlert }) => {
   return (
     <Formik
@@ -10,30 +35,34 @@ const UploadForm = ({ onSubmit, tags, showLoginAlert }) => {
         postType: "artwork",
         title: "",
         body: "",
-        image_file_path: "",
         tags: [],
+        image_file: "", //add this for cloudinary
       }}
-      validationSchema={Yup.object({
-        title: Yup.string().required("Required"),
-        body: Yup.string().when("postType", {
-          is: "discussion",
-          then: (schema) => schema.required("Required"),
-        }),
-        image_file_path: Yup.string().when("postType", {
-          is: "artwork",
-          then: (schema) => schema.required("Required"),
-        }),
-        tags: Yup.array()
-          .min(1, "Choose at least one tag")
-          .of(Yup.number().typeError("Must be a number").required("Required")),
-      })}
+      validationSchema={(formikValues) => getValidationSchema(formikValues)}
       onSubmit={onSubmit}
+      // validationSchema={Yup.object({
+      //   title: Yup.string().required("Required"),
+      //   body: Yup.string().when("postType", {
+      //     is: "discussion",
+      //     then: Yup.string().required("Required"),
+      //     otherwise: Yup.string(),
+      //   }),
+      //   image_file: Yup.mixed().when("postType", {
+      //     is: "artwork",
+      //     then: Yup.mixed().required("A file is required for artwork"),
+      //     otherwise: Yup.mixed(),
+      //   }),
+      //   tags: Yup.array()
+      //     .min(1, "Choose at least one tag")
+      //     .of(Yup.number().typeError("Must be a number").required("Required")),
+      // })}
+      // onSubmit={onSubmit}
     >
       {({ values, setFieldValue }) => (
         <Form>
           <div className="mb-3">
             <label htmlFor="postType" className="form-label">
-              Choose Upload Type
+              Please Choose Upload Type!
             </label>
             <Field as="select" name="postType" className="form-select">
               <option value="artwork">Artwork</option>
@@ -53,9 +82,13 @@ const UploadForm = ({ onSubmit, tags, showLoginAlert }) => {
                 Image File Path
               </label>
               <Field
-                name="image_file_path"
-                type="text"
-                className="form-control"
+                name="image_file"
+                type="file"
+                onChange={(event) => {
+                  const file = event.currentTarget.files[0];
+                  console.log("Selected file:", file);
+                  setFieldValue("image_file", file);
+                }}
               />
               <ErrorMessage name="image_file_path" className="text-danger" />
             </div>
@@ -75,7 +108,10 @@ const UploadForm = ({ onSubmit, tags, showLoginAlert }) => {
             </label>
             <Field as="select" name="tags" className="form-control" multiple>
               {tags.map((tag) => (
-                <option key={tag.tag_id} value={tag.tag_id}> {tag.title} </option>
+                <option key={tag.tag_id} value={tag.tag_id}>
+                  {" "}
+                  {tag.title}{" "}
+                </option>
               ))}
             </Field>
             <ErrorMessage name="tags" component="div" className="text-danger" />

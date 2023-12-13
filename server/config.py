@@ -24,7 +24,7 @@ app.secret_key = os.environ.get("SECRET_KEY")
 import secrets
 
 db = SQLAlchemy(app)
-
+migrate = Migrate(app, db)
 
 # Instantiate REST API
 api = Api(app)

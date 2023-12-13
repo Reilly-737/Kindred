@@ -155,12 +155,12 @@ class Artworks(AuthenticatedResource):
         self.check_authentication()
         user_id = session['user_id']
         title = request.json.get('title')
-        image_file_path = request.json.get('image_file_path')
+        image_url = request.json.get('image_url')
         tags = request.json.get('tags')
         try:
             new_artwork = Artwork(
                 title=title,
-                image_file_path=image_file_path,
+                image_url=image_url,
                 user_id=user_id
             )
             db.session.add(new_artwork)
@@ -361,34 +361,6 @@ class Tags(Resource):
         return tag_list, 200
 
 api.add_resource(Tags, "/tags")
-
-class Search(Resource):
-    def get(self):
-
-        query = request.args.get('query')
-        if not query:
-            return {'error': 'Query parameter "query" is required'}, 400
-        # Search Users
-        users = User.query.filter(or_(User.username.ilike(f'%{query}%'), User.bio.ilike(f'%{query}%'))).all()
-        serialized_users = [user.to_dict(only=("username", "created_at", "updated_at")) for user in users]
-        # Search Artworks by title or tag
-        artwork_tags = ArtworkTag.query.join(Tag).filter(Tag.title.ilike(f'%{query}%')).all()
-        artwork_ids_by_tag = [artwork_tag.artwork_id for artwork_tag in artwork_tags]
-        artworks_by_title = Artwork.query.filter(Artwork.title.ilike(f'%{query}%')).all()
-        artworks = Artwork.query.filter(Artwork.artwork_id.in_(artwork_ids_by_tag) | Artwork.artwork_id.in_([artwork.artwork_id for artwork in artworks_by_title])).all()
-        serialized_artworks = [artwork.to_dict() for artwork in artworks]
-        # Search DiscussionPosts by title or tag
-        post_tags = PostTag.query.join(Tag).filter(Tag.title.ilike(f'%{query}%')).all()
-        post_ids_by_tag = [post_tag.post_id for post_tag in post_tags]
-        posts_by_title = DiscussionPost.query.filter(DiscussionPost.title.ilike(f'%{query}%')).all()
-        discussion_posts = DiscussionPost.query.filter(DiscussionPost.post_id.in_(post_ids_by_tag) | DiscussionPost.post_id.in_([post.post_id for post in posts_by_title])).all()
-        serialized_posts = [{'discussion_post': post.to_dict(), 'comments': [comment.to_dict() for comment in post.comments]} for post in discussion_posts]
-        return {
-            'users': serialized_users,
-            'artworks': serialized_artworks,
-            'discussion_posts': serialized_posts
-        }, 200
-api.add_resource(Search, "/search")
 class CheckSession(Resource): 
     def get(self):  
         if "user_id" not in session:
@@ -412,17 +384,13 @@ class ViewOne(Resource):
             return {'message': 'Invalid item type'}, 400
         if not item:
             return {'message': f'{item_type.capitalize()} not found'}, 404
-        # Convert the item to a dictionary with serialization rules if needed
         item_dict = item.to_dict() if hasattr(item, 'to_dict') else {}
-        # You can add more details based on the item type
         if item_type == 'artwork':
-            # Add more artwork details if needed
             pass
         elif item_type == 'discussion':
-            # Add more discussion post details if needed
             pass
         return item_dict, 200
-
+        
 api.add_resource(ViewOne, '/views/<string:item_type>/<int:item_id>')
 class NewestArt(Resource):
     def get(self):
@@ -453,6 +421,30 @@ class NewestPostsResource(Resource):
             return {'error': str(e)}, 500
 
 api.add_resource(NewestPostsResource, '/newestPosts')
+
+class SearchAPI(Resource):
+    def get(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('query', type=str, required=True, help='Search query cannot be blank')
+        parser.add_argument('type', type=str, required=True, help='Resource type cannot be blank')
+        args = parser.parse_args()
+        query = args['query']
+        resource_type = args['type']
+        if resource_type == 'users':
+            results = User.query.filter(User.username.ilike(f'%{query}%')).all()
+        elif resource_type == 'artworks':
+            results = Artwork.query.filter(Artwork.title.ilike(f'%{query}%')).all()
+        elif resource_type == 'discussion-posts':
+            results = DiscussionPost.query.filter(DiscussionPost.title.ilike(f'%{query}%')).all()
+        elif resource_type == 'tags':
+            results = Tag.query.filter(Tag.title.ilike(f'%{query}%')).all()
+        else:
+            return {'message': 'Invalid resource type'}, 400
+
+        results_list = [result.to_dict() for result in results]
+        return results_list
+
+api.add_resource(SearchAPI, '/search')
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)

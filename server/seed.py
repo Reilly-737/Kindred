@@ -55,19 +55,19 @@ def seed_artwork():
     artwork_data = [
         {
             'title': 'The Odd Dream on A Distant Planet',
-            'image_file_path': 'https://i.imgur.com/1crvAUE_d.jpg?maxwidth=520&shape=thumb&fidelity=high',
+            'image_url': 'https://i.imgur.com/1crvAUE_d.jpg?maxwidth=520&shape=thumb&fidelity=high',
             'user_id': 1,
             'created_at': predefined_created_at,
         },
         {
             'title': 'Feeling A Growth Inside',
-            'image_file_path': 'https://i.imgur.com/igP7cBA_d.jpg?maxwidth=520&shape=thumb&fidelity=high',
+            'image_url': 'https://i.imgur.com/igP7cBA_d.jpg?maxwidth=520&shape=thumb&fidelity=high',
             'user_id': 2,
             'created_at': predefined_created_at,
         },
         {
             'title': 'The Pout',
-            'image_file_path': 'https://i.imgur.com/b6P0PSw_d.jpg?maxwidth=520&shape=thumb&fidelity=high',
+            'image_url': 'https://i.imgur.com/b6P0PSw_d.jpg?maxwidth=520&shape=thumb&fidelity=high',
             'user_id': 3,
             'created_at': predefined_created_at,
         },

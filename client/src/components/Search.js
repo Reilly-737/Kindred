@@ -1,83 +1,62 @@
-import { useState, useEffect } from "react";
-import FormComp from "./Form";
+import React, { useState, useEffect } from "react";
+import ArtworkCard from "./ArtworkCard";
+import PostCard from "./PostCard";
 
 const SearchForm = () => {
   const [tags, setTags] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedTag, setSelectedTag] = useState('');
   const [searchResults, setSearchResults] = useState([]);
 
   useEffect(() => {
-    // Fetch the list of tags from the backend when the component mounts
-    const fetchTags = async () => {
-      try {
-        const response = await fetch("/tags");
-        if (response.ok) {
-          const data = await response.json();
-          setTags(data);
-        } else {
-          console.error("Failed to fetch tags");
-        }
-      } catch (error) {
-        console.error("Error fetching tags", error);
-      }
-    };
-
-    fetchTags();
+    fetch("/tags")
+      .then(response => response.json())
+      .then(data => setTags(data))
+      .catch(error => console.error('Error fetching tags:', error));
   }, []);
 
-  const handleSearch = async (searchData) => {
-    try {
-      const { searchTerm, selectedTag } = searchData;
+  const handleSearch = async (event) => {
+    event.preventDefault();
+    const searchUrl = `/search?query=${searchTerm}${selectedTag ? `&tag=${selectedTag}` : ''}`;
 
-      // Define the base URL for the search
-      let searchUrl = "/search";
-
-      // Check if a tag is selected
-      if (selectedTag) {
-        searchUrl += `?tag=${selectedTag}`;
-      }
-
-      // Check if a search term is provided
-      if (searchTerm) {
-        // If a tag is selected, append "&" to add the search term
-        // If no tag is selected, use "?" to start the query parameters
-        searchUrl += selectedTag
-          ? `&search=${searchTerm}`
-          : `?search=${searchTerm}`;
-      }
-
-      // Fetch search results based on the constructed URL
-      const response = await fetch(searchUrl);
-
-      if (response.ok) {
-        const data = await response.json();
-        setSearchResults(data);
-      } else {
-        console.error("Failed to fetch search results");
-      }
-    } catch (error) {
-      console.error("Error performing search", error);
-    }
+    fetch(searchUrl)
+      .then(response => response.json())
+      .then(data => setSearchResults(data))
+      .catch(error => console.error('Error performing search:', error));
   };
 
   return (
     <div>
       <h1>Search Form</h1>
-      <FormComp mode="search" onSubmit={handleSearch} tags={tags} />
-      {/* Display search results or do something else with them */}
+      <form onSubmit={handleSearch}>
+        <input
+          type="text"
+          placeholder="Search..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <select value={selectedTag} onChange={(e) => setSelectedTag(e.target.value)}>
+          <option value="">Select Tag</option>
+          {tags.map(tag => (
+            <option key={tag.id} value={tag.title}>{tag.title}</option>
+          ))}
+        </select>
+        <button type="submit">Search</button>
+      </form>
       <SearchResultsList results={searchResults} />
     </div>
   );
 };
 
-// Placeholder component to display search results
 const SearchResultsList = ({ results }) => {
   return (
     <div>
       <h2>Search Results</h2>
       <ul>
-        {results.map((result) => (
+        {results.map(result => (
           <li key={result.id}>
-            {/* Render each search result item as needed */}
+            {result.type === 'artwork' && <ArtworkCard {...result} />}
+            {result.type === 'discussion' && <PostCard {...result} />}
           </li>
         ))}
       </ul>

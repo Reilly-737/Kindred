@@ -97,7 +97,7 @@ const Home = () => {
            {newestArtworkPosts.map((artwork) => (
              <ArtworkCard 
              key={artwork.artwork_id}
-             image={artwork.image_file_path} 
+             image={artwork.image_url} 
              title={artwork.title}
              id={artwork.artwork_id}
              tags={artwork.tags}

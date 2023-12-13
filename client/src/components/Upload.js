@@ -15,7 +15,7 @@ const Upload = () => {
   const [uploadData, setUploadData] = useState({
     title: "",
     body: "",
-    image_file_path: "",
+    image_url: "",
     tags: [],
     postType: "artwork",
   });
@@ -41,17 +41,49 @@ const Upload = () => {
     fetchTags();
   }, [user]);
 
-  const handleFormSubmit = async (values, { setSubmitting }) => {
-    try {
-      const endpoint =
-        values.postType === "artwork" ? "/artworks" : "/discussion-posts";
+  const handleImageUpload = async (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', 'kindred');
+    formData.append('cloud_name', 'dax59eswf');
 
+    try {
+      const response = await fetch ('https://api.cloudinary.com/v1_1/dax59eswf/upload', {
+        method: 'POST', 
+        body: formData,
+      });
+      const data = await response.json(); 
+      return data.secure_url; // to be sent to backend
+    } catch (error) {
+      console.error('Error uploading the image:', error);
+      return null;
+    }
+  };//add fetch url
+
+  const handleFormSubmit = async (values, { setSubmitting }) => {
+    let formData = {...values};
+
+    if (values.postType === "artwork" && values.image_file) {
+      const imageUrl = await handleImageUpload(values.image_file);
+      if (imageUrl) {
+        formData.image_url = imageUrl;
+        delete formData.image_file;
+      } else {
+        setAlertMessage("Image upload failed! Please try again.");
+        handleSnackType("error");
+        setSubmitting(false);
+        return;
+      }
+    }
+    const endpoint = formData.postType === "artwork" ? "/artworks" : "/discussion-posts";
+
+    try {
       const response = await fetch(endpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(values),
+        body: JSON.stringify(formData),
       });
 
       if (response.ok) {
