@@ -3,31 +3,6 @@ import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { Button } from "react-bootstrap";
 
-function getValidationSchema(values) {
-  let schema = Yup.object({
-    title: Yup.string().required("Required"),
-    body: Yup.string(),
-    image_file: Yup.mixed(),
-    tags: Yup.array()
-      .min(1, "Choose at least one tag")
-      .of(Yup.number().typeError("Must be a number").required("Required")),
-  });
-
-  if (values.postType === "discussion") {
-    schema = schema.shape({
-      body: Yup.string().required("Required"),
-    });
-  }
-
-  if (values.postType === "artwork") {
-    schema = schema.shape({
-      image_file: Yup.mixed().required("A file is required for artwork"),
-    });
-  }
-
-  return schema;
-}
-
 const UploadForm = ({ onSubmit, tags, showLoginAlert }) => {
   return (
     <Formik
@@ -38,25 +13,23 @@ const UploadForm = ({ onSubmit, tags, showLoginAlert }) => {
         tags: [],
         image_file: "", //add this for cloudinary
       }}
-      validationSchema={(formikValues) => getValidationSchema(formikValues)}
+      validationSchema={Yup.object({
+        title: Yup.string().required("Required"),
+        body: Yup.string().when("postType", {
+          is: "discussion",
+          then: () => Yup.string().required("Required"),
+          otherwise: () => Yup.string(),
+        }),
+        image_file: Yup.mixed().when("postType", {
+          is: "artwork",
+          then: () => Yup.mixed().required("A file is required for artwork"),
+          otherwise: () => Yup.mixed(),
+        }),
+        tags: Yup.array()
+          .min(1, "Choose at least one tag")
+          .of(Yup.number().typeError("Must be a number").required("Required")),
+      })}
       onSubmit={onSubmit}
-      // validationSchema={Yup.object({
-      //   title: Yup.string().required("Required"),
-      //   body: Yup.string().when("postType", {
-      //     is: "discussion",
-      //     then: Yup.string().required("Required"),
-      //     otherwise: Yup.string(),
-      //   }),
-      //   image_file: Yup.mixed().when("postType", {
-      //     is: "artwork",
-      //     then: Yup.mixed().required("A file is required for artwork"),
-      //     otherwise: Yup.mixed(),
-      //   }),
-      //   tags: Yup.array()
-      //     .min(1, "Choose at least one tag")
-      //     .of(Yup.number().typeError("Must be a number").required("Required")),
-      // })}
-      // onSubmit={onSubmit}
     >
       {({ values, setFieldValue }) => (
         <Form>
@@ -78,10 +51,10 @@ const UploadForm = ({ onSubmit, tags, showLoginAlert }) => {
           </div>
           {values.postType === "artwork" && (
             <div className="mb-3">
-              <label htmlFor="image_file_path" className="form-label">
+              <label htmlFor="image_file" className="form-label">
                 Image File Path
               </label>
-              <Field
+              <input
                 name="image_file"
                 type="file"
                 onChange={(event) => {

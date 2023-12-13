@@ -243,7 +243,7 @@ class DiscussionPosts(AuthenticatedResource):
         user_id = session['user_id']
         title = request.json.get('title')
         body = request.json.get('body')
-        post_tags = request.json.get('post_tags')
+        post_tags = request.json.get('tags')
         if not title or not isinstance(title, str):
             return {'error': 'Title is required and must be a string'}, 400
         if not body or not isinstance(body, str):
@@ -257,16 +257,21 @@ class DiscussionPosts(AuthenticatedResource):
                 user_id=user_id
             )
             db.session.add(new_post)
-            db.session.flush()
+            #db.session.flush()
             
             for tag_id in post_tags:
                 tag = Tag.query.get(tag_id)
                 if tag: 
+                    
                     post_tag = PostTag(post=new_post, tag=tag)
                     db.session.add(post_tag)
+
             db.session.commit()
+            import ipdb
+            ipdb.set_trace()
             return new_post.to_dict(), 201
         except Exception as e:
+            
             db.session.rollback()
             return {'message': str(e)}, 400
         
@@ -367,7 +372,7 @@ class CheckSession(Resource):
             return {"message": "Not Authorized"}, 403
 
         user = db.session.query(User).get(session["user_id"])
-
+       
         if user:
             return user.to_dict(rules=("-email", "-bio")), 200
 
