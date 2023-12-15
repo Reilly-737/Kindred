@@ -16,7 +16,6 @@ const Header = ({ user, updateUser, setAlertMessage, handleSnackType }) => {
         setAlertMessage(err.message);
       });
   };
-
   return (
     <div id="header">
       <Navbar color="custom" light expand="md" className="custom-navbar">
@@ -29,11 +28,13 @@ const Header = ({ user, updateUser, setAlertMessage, handleSnackType }) => {
             <NavLink tag={RouterNavLink} to="/search" className="custom-button">
               search
             </NavLink>
+
           </NavItem>
           <NavItem>
             <NavLink tag={RouterNavLink} to="/signup" className="custom-button">
               signup
             </NavLink>
+
           </NavItem>
           <NavItem>
             <NavLink tag={RouterNavLink} to="/aboutus" className="custom-button">

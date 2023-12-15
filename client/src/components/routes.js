@@ -3,7 +3,7 @@ import Home from "./Home";
 import Upload from "./Upload";
 import Signup from "./Signup";
 import Login from "./Login";
-import Profile from "./Profile";
+import UserProfile from "./UserProfile";
 import AboutUs from "./AboutUs";
 import ErrorPage from "./ErrorPage";
 import SearchForm from "./Search";
@@ -36,7 +36,7 @@ const routes = [
       },
       {
         path: "/profile/:user_id", 
-        element: <Profile />,
+        element: <UserProfile />,
       },
       {
         path: "/search",

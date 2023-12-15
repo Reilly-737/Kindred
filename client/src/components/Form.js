@@ -54,6 +54,7 @@ const FormComp = ({ mode = "signup", onSubmit }) => {
             : Yup.string(),
       })}
       onSubmit={(values, { setSubmitting }) => {
+        console.log(url)
         fetch(url, {
           method: "POST",
           headers: {
@@ -76,7 +77,8 @@ const FormComp = ({ mode = "signup", onSubmit }) => {
               "A fun surprise when you post your art for the first time, your art will be displayed on the front page for 24 hours!",
               "Can't wait to see your work!"
             );
-            onSubmit(); 
+            onSubmit();
+            console.log(user, newUser.id) 
             navigate(user ? `/profile/${newUser.id}` : "/upload");
           })
           .catch((error) => {

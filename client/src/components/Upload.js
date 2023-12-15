@@ -56,12 +56,12 @@ const Upload = () => {
         }
       );
       const data = await response.json();
-      return data.secure_url; // to be sent to backend
+      return data.secure_url; 
     } catch (error) {
       console.error("Error uploading the image:", error);
       return null;
     }
-  }; //add fetch url
+  }; 
 
   const handleFormSubmit = async (values, { setSubmitting }) => {
     let formData = { ...values };

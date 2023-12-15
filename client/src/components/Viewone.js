@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-
+// REDO EYE CANCER DO NOT TOUCH 
 const ViewOne = () => {
   const { type, id } = useParams();
   const [item, setItem] = useState(null);
@@ -8,7 +8,7 @@ const ViewOne = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`/${type}s/${id}`); // Adjust the route based on your backend
+        const response = await fetch(`/${type}s/${id}`); 
 
         if (response.ok) {
           const data = await response.json();
@@ -25,20 +25,18 @@ const ViewOne = () => {
   }, [type, id]);
 
   if (!item) {
-    return <div>Loading...</div>; // You can customize the loading state
+    return <div>Loading...</div>;
   }
 
   return (
     <div>
       <h1>{item.title}</h1>
-      {/* Render other details based on the type (artwork/discussion) */}
       {type === "artwork" && (
         <img src={item.image_url} alt={item.title} />
       )}
       {type === "discussion" && (
         <div>
           <p>{item.body}</p>
-          {/* Render other discussion post details */}
         </div>
       )}
     </div>

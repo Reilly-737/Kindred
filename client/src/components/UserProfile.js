@@ -3,7 +3,7 @@ import { useNavigate, useParams, Link } from "react-router-dom";
 import ArtworkCard from "./ArtworkCard";
 import PostCard from "./PostCard";
 
-const Profile = () => {
+const UserProfile = () => {
   const { user_id } = useParams();
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState({});
@@ -78,4 +78,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default UserProfile;

@@ -119,7 +119,7 @@ class DiscussionPost(db.Model, SerializerMixin):
     comments = db.relationship('Comment', back_populates='discussion_post', cascade="all, delete-orphan" )
     user = db.relationship('User', back_populates='discussion_posts')
     #serialize_rule
-    serialize_rules = ("-user.discussion_posts")
+    serialize_rules = ("-user.discussion_posts", "-post_tags.post", "-comments.discussion_post")
     #exclude discussion_posts and comments fields in user relationships
     
     @validates("body")
@@ -148,7 +148,7 @@ class Tag(db.Model, SerializerMixin):
     post_tags = db.relationship('PostTag', back_populates='tag', cascade="all, delete-orphan")
     
     #serialization rules
-    serialize_rules = ("-artwork_tags.tag", "post_tags.tag",)
+    #serialize_rules = ("-artwork_tags.tag", "post_tags.tag",)
     #exclude tag field in artwork_tags relationship
     #exclude tag field in post_tags relationship
    

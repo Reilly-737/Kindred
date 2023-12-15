@@ -1,0 +1,38 @@
+.post-card-container {
+  margin-bottom: 20px; /* Space between cards */
+}
+
+.post-username {
+  text-align: center; /* Center the username */
+  margin-top: 10px;
+  font-size: 1.2em;
+  color: hsla(0, 0%, 30%, 1); /* Adjust the color as needed */
+}
+
+.post-card {
+  width: 300px;
+  background: rgb(161, 197, 238); /* A light background for readability */
+  border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; /* Same border-radius as ArtworkCard */
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
+  margin-bottom: 20px;
+  overflow: hidden;
+  position: relative;
+  text-align: center;
+  padding: 20px;
+  border: 3px solid hsla(0, 95%, 35%, 1); /* Same border style as ArtworkCard */
+}
+
+.post-details {
+  margin-top: 10px;
+}
+
+.post-tags {
+  font-size: 0.9em;
+  color: hsla(210, 60%, 50%, 1);
+  margin-bottom: 10px;
+}
+
+.post-body {
+  font-size: 1em;
+  color: #333;
+}

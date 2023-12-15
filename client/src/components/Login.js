@@ -32,14 +32,13 @@ const Login = () => {
           resp
             .json()
             .then((userObj) => {
+              console.log(userObj)
               updateUser(userObj);
-              return userObj;
-            })
-            .then((userObj) => {
-              navigate(`/profile/${userObj.id}`);
+              navigate(`/profile/${userObj.user_id}`);
               handleSnackType("success");
               setAlertMessage("Welcome back!");
-            });
+            })
+        
         } else {
           resp.json().then((err) => {
             handleSnackType("error");

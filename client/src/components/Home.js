@@ -7,7 +7,7 @@ const Home = () => {
   const [newestDiscussionPosts, setNewestDiscussionPosts] = useState([]);
   const [newArtists, setNewArtists] = useState([]);
   const { setAlertMessage, handleSnackType } = useOutletContext();
-
+//REDO CHECK ROUTES AND ADJUST LOGIC GROSS 
   useEffect(() => {
     const fetchNewestArtworkPosts = async () => {
       try {

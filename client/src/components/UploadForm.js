@@ -11,7 +11,7 @@ const UploadForm = ({ onSubmit, tags, showLoginAlert }) => {
         title: "",
         body: "",
         tags: [],
-        image_file: "", //add this for cloudinary
+        image_file: "", 
       }}
       validationSchema={Yup.object({
         title: Yup.string().required("Required"),

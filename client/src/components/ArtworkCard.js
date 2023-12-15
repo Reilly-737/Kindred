@@ -1,10 +1,12 @@
 import { Link } from "react-router-dom";
+import "./ArtworkCard.css";
 
-const ArtworkCard = ({ image, title, id, tags }) => {
+const ArtworkCard = ({ image, title, tags, username }) => {
+   console.log("Username in ArtworkCard:", username);
   return (
-    <Link to={`/artworks/${id}`} className="card-link">
-      <div className="card">
-        <img src={image} alt={title} />
+      <div className="artwork-card">
+        {image && <img src={image} alt={title} className="artwork-image" />}
+        <div className="artwork-username">Artist: {username}</div>
         <div className="details">
           <h2>{title}</h2>
           <div className="hidden">
@@ -12,7 +14,7 @@ const ArtworkCard = ({ image, title, id, tags }) => {
           </div>
         </div>
       </div>
-    </Link>
+
   );
 };
 

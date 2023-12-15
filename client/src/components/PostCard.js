@@ -1,18 +1,31 @@
+import React from "react";
 import { Link } from "react-router-dom";
+import CommentSection from "./CommentSection";
+import "./PostCard.css";
 
-const PostCard = ({ title, id, tags, body }) => {
+const PostCard = ({
+  title,
+  id,
+  tags,
+  body,
+  username,
+  user,
+}) => {
   return (
-    <div className="card">
-      <div className="details">
-        <h2>{title}</h2>
-        <div className="hidden">
-          <p>Tags: {tags ? tags.join(", ") : "No tags"}</p>
-          <p>{body}</p>
-          <Link to={`/discussion-posts/${id}`}>
-            <button>Read Post</button>
-          </Link>
+    <div className="post-card-container">
+      <Link to={`/posts/${id}`} className="post-link">
+        <div className="post-card">
+          <div className="post-username">Artist: {username}</div>
+          <div className="post-details">
+            <h2>{title}</h2>
+            <div className="post-tags">
+              Tags: {tags ? tags.join(", ") : "No tags"}
+            </div>
+            <div className="post-body">{body}</div>
+          </div>
         </div>
-      </div>
+      </Link>
+      <CommentSection postId={id} user={user}  />
     </div>
   );
 };

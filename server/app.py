@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from flask import Flask, request, abort
+from flask import Flask, request, abort, make_response
 from flask_restful import Api, Resource, reqparse
 from flask_sqlalchemy import SQLAlchemy
 from flask import session
@@ -11,7 +11,7 @@ from sqlalchemy import or_
 from config import app, db
 api = Api(app)
 bcrypt = Bcrypt(app)
-
+import ipdb
 # Instantiate app, set attributes
 
 # Add your model imports
@@ -49,11 +49,11 @@ class UserById(AuthenticatedResource):
 
         if authenticated_user_id and requested_user_id == authenticated_user_id:
             user = User.query.get_or_404(requested_user_id, description=f"User {user_id} not found")
-            return user.to_dict(), 200
+            return user.to_dict(rules=("-password", "-email", "bio", "artworks", "discussion_posts")), 200
         else:
             try:
                 user = User.query.filter_by(user_id=requested_user_id).one()
-                return user.to_dict(only=("username", "created_at", "updated_at")), 200
+                return user.to_dict(only=("username", "bio", "created_at", "updated_at", "artworks", "discussion_posts")), 200
             except ValueError:
                 return {'error': f'User with ID {user_id} not found'}, 404
 
@@ -257,24 +257,18 @@ class DiscussionPosts(AuthenticatedResource):
                 user_id=user_id
             )
             db.session.add(new_post)
-            #db.session.flush()
-            
+            db.session.commit()
             for tag_id in post_tags:
-                tag = Tag.query.get(tag_id)
+                tag = db.session.get(Tag,tag_id)
                 if tag: 
                     
                     post_tag = PostTag(post=new_post, tag=tag)
                     db.session.add(post_tag)
-
             db.session.commit()
-            import ipdb
-            ipdb.set_trace()
             return new_post.to_dict(), 201
         except Exception as e:
-            
             db.session.rollback()
             return {'message': str(e)}, 400
-        
 api.add_resource(DiscussionPosts, "/discussion-posts")
 
 class DiscussionPostById(Resource):
@@ -342,7 +336,24 @@ class Comment(AuthenticatedResource):
             return {'message': str(e)}, 400
         
 api.add_resource(Comment, "/comments")
-
+class GetComments(Resource):
+    def get(self, post_id):
+        try:
+            comments = db.session.query(Comment).filter(Comment.post_id == post_id).all()
+            comments_data = [self.convert_to_dict(comment) for comment in comments]
+            return make_response({'comments': comments_data}), 200
+        except Exception as e:
+            return make_response({'error': str(e)}), 500
+    @staticmethod #because it's more of a utility function?
+    def convert_to_dict(comment):
+        return {
+            'comment_id': comment.comment_id,
+            'content': comment.content,
+            'created_at': comment.created_at.isoformat(),
+            'user_id': comment.user_id,
+            'post_id': comment.post_id
+        }
+api.add_resource(GetComments, "/discussion-post/comments/<int:post_id>")
 class DeleteComment(AuthenticatedResource):
     def delete(self, comment_id):
         self.check_authentication()
@@ -362,22 +373,17 @@ api.add_resource(DeleteComment, '/comments/<int:comment_id>')
 class Tags(Resource):
     def get(self):
         tags = Tag.query.all()
-        tag_list = [tag.to_dict() for tag in tags]
+        tag_list = [tag.to_dict(only=("tag_id","title")) for tag in tags]
         return tag_list, 200
-
 api.add_resource(Tags, "/tags")
 class CheckSession(Resource): 
-    def get(self):  
+    def get(self):
         if "user_id" not in session:
             return {"message": "Not Authorized"}, 403
-
         user = db.session.query(User).get(session["user_id"])
-       
         if user:
-            return user.to_dict(rules=("-email", "-bio")), 200
-
+            return user.to_dict(rules=("-email", "bio")), 200
         return {"message": "Not Authorized"}, 403
-
 api.add_resource(CheckSession, '/check_session')
 class ViewOne(Resource):
     def get(self, item_type, item_id):
@@ -395,7 +401,6 @@ class ViewOne(Resource):
         elif item_type == 'discussion':
             pass
         return item_dict, 200
-        
 api.add_resource(ViewOne, '/views/<string:item_type>/<int:item_id>')
 class NewestArt(Resource):
     def get(self):
@@ -410,7 +415,6 @@ class NewestArt(Resource):
             return newest_artworks_list, 200
         except Exception as e:
             return {'error': str(e)}, 500
-
 api.add_resource(NewestArt, '/newestArt')
 class NewestPostsResource(Resource):
     def get(self):
@@ -426,27 +430,28 @@ class NewestPostsResource(Resource):
             return {'error': str(e)}, 500
 
 api.add_resource(NewestPostsResource, '/newestPosts')
-
 class SearchAPI(Resource):
     def get(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('query', type=str, required=True, help='Search query cannot be blank')
-        parser.add_argument('type', type=str, required=True, help='Resource type cannot be blank')
-        args = parser.parse_args()
-        query = args['query']
-        resource_type = args['type']
-        if resource_type == 'users':
-            results = User.query.filter(User.username.ilike(f'%{query}%')).all()
-        elif resource_type == 'artworks':
-            results = Artwork.query.filter(Artwork.title.ilike(f'%{query}%')).all()
-        elif resource_type == 'discussion-posts':
-            results = DiscussionPost.query.filter(DiscussionPost.title.ilike(f'%{query}%')).all()
-        elif resource_type == 'tags':
-            results = Tag.query.filter(Tag.title.ilike(f'%{query}%')).all()
-        else:
-            return {'message': 'Invalid resource type'}, 400
+        query = request.args.get('query', '')
+        tag = request.args.get('tag', '')
+        results = {
+            'users': [],
+            'artworks': [],
+            'discussion_posts': []
+        }
+        if query:
+            results['users'] = User.query.filter(User.username.ilike(f'%{query}%')).all()
+            results['artworks'] = Artwork.query.filter(Artwork.title.ilike(f'%{query}%')).all()
+            results['discussion_posts'] = DiscussionPost.query.filter(DiscussionPost.title.ilike(f'%{query}%')).all()
+        if tag:
+            pass
+            
+        results_list = {
+            'users': [user.to_dict() for user in results['users']],
+            'artworks': [artwork.to_dict() for artwork in results['artworks']],
+            'discussion_posts': [post.to_dict() for post in results['discussion_posts']]
+        }
 
-        results_list = [result.to_dict() for result in results]
         return results_list
 
 api.add_resource(SearchAPI, '/search')
