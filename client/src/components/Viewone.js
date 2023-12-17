@@ -1,47 +1,36 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-// REDO EYE CANCER DO NOT TOUCH 
+import CommentSection from "./CommentSection";
+import PostCard from "./PostCard";
+
 const ViewOne = () => {
-  const { type, id } = useParams();
-  const [item, setItem] = useState(null);
+  const { post_id } = useParams();
+  const [post, setPost] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(`/${type}s/${id}`); 
+    fetch(`/discussion-posts/${post_id}`)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Fetched Post Data:", data); 
+        setPost(data);
+      })
+      .catch((error) => console.error("Error:", error));
+  }, [post_id]);
 
-        if (response.ok) {
-          const data = await response.json();
-          setItem(data);
-        } else {
-          console.error(`Failed to fetch ${type} details`);
-        }
-      } catch (error) {
-        console.error(`Error fetching ${type} details`, error);
-      }
-    };
-
-    fetchData();
-  }, [type, id]);
-
-  if (!item) {
-    return <div>Loading...</div>;
-  }
+  if (!post) return <div>Loading...</div>;
 
   return (
     <div>
-      <h1>{item.title}</h1>
-      {type === "artwork" && (
-        <img src={item.image_url} alt={item.title} />
-      )}
-      {type === "discussion" && (
-        <div>
-          <p>{item.body}</p>
-        </div>
-      )}
+      <PostCard
+        title={post.title}
+        id={post.post_id}
+        body={post.body}
+        username={post.username}
+        post_tags={post.post_tags}
+      />
+      <CommentSection postId={post_id} />
     </div>
   );
 };
 
 export default ViewOne;
-

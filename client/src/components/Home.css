@@ -1,0 +1,29 @@
+.home-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+}
+.bottom-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.artwork-cards, .discussion-cards {
+  width: 50%; /* Half the width of the container */
+  height: 600px;
+  overflow-y: auto; /* Enables scrolling */
+}
+
+@media (max-width: 768px) {
+  .home-container {
+    flex-direction: column;
+  }
+
+  .artwork-cards, .discussion-cards {
+    width: 100%; /* Full width on smaller screens */
+  }
+}
+

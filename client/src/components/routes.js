@@ -7,6 +7,7 @@ import UserProfile from "./UserProfile";
 import AboutUs from "./AboutUs";
 import ErrorPage from "./ErrorPage";
 import SearchForm from "./Search";
+import Viewone from "./Viewone";
 const routes = [
   {
     path: "/",
@@ -35,12 +36,16 @@ const routes = [
         element: <AboutUs />,
       },
       {
-        path: "/profile/:user_id", 
+        path: "/profile/:user_id",
         element: <UserProfile />,
       },
       {
         path: "/search",
         element: <SearchForm />,
+      },
+      {
+        path: "/posts/:post_id", // Define the route for viewing individual posts
+        element: <Viewone />,
       },
     ],
   },

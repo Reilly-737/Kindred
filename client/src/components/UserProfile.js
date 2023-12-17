@@ -70,7 +70,7 @@ const UserProfile = () => {
         <h3>My Discussion Posts</h3>
         <div className="discussion-posts-container">
           {discussionPosts.map((post) => (
-            <PostCard key={post.post_id} {...post} />
+            <PostCard key={post.post_id} id={post.post_id} {...post} />
           ))}
         </div>
       </div>

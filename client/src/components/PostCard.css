@@ -1,12 +1,12 @@
 .post-card-container {
   width: 100%;
-  max-width: 600px; /* Adjust width as needed */
+  max-width: 400px; /* Adjust width as needed */
   margin: 20px auto; /* Center card on page with margin */
   background: rgb(161, 197, 238);
   border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
   border: 3px solid hsla(0, 95%, 35%, 1);
-  overflow: hidden;
+  overflow-y: auto;
   position: relative; /* Ensures child absolute positioning is relative to this container */
 }
 

@@ -11,7 +11,10 @@ const SearchForm = () => {
   useEffect(() => {
     fetch("/tags")
       .then((response) => response.json())
-      .then((data) => setTags(data))
+      .then((data) => {
+        setTags(data);
+        console.log("Fetched Tags:", data); // Correct placement of console.log
+      })
       .catch((error) => console.error("Error fetching tags:", error));
   }, []);
 
@@ -55,6 +58,7 @@ const SearchForm = () => {
 };
 
 const SearchResultsList = ({ results }) => {
+  console.log("Search results:", results);
   return (
     <div>
       <h2>Search Results</h2>
@@ -66,7 +70,7 @@ const SearchResultsList = ({ results }) => {
             title={artwork.title}
             id={artwork.artwork_id}
             username={artwork.user.username} 
-            tags={artwork.tags} 
+            tags={artwork.tag} 
           />
         ))}
       {results.users &&
@@ -77,7 +81,7 @@ const SearchResultsList = ({ results }) => {
         ))}
       {results.discussion_posts &&
         results.discussion_posts.map((post) => (
-          <PostCard key={post.post_id} {...post} />
+          <PostCard key={post.post_id} id={post.post_id} {...post} />
         ))}
     </div>
   );

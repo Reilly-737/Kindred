@@ -312,30 +312,35 @@ class EditDiscussionPosts(AuthenticatedResource):
             db.session.rollback()
             return {'error': f"Failed to delete discussion post: {str(e)}"}, 400 
 api.add_resource(EditDiscussionPosts, "/discussion-posts/<int:id>")      
+class DiscussionPostDetail(Resource):
+    def get(self, post_id):
+        post = DiscussionPost.query.get_or_404(post_id, description=f'Discussion Post {post_id} not found')
+        return post.to_dict(), 200
 
+api.add_resource(DiscussionPostDetail, '/discussion-posts/<int:post_id>')
 class Comment(AuthenticatedResource):
     def post(self):
         self.check_authentication()
         user_id = session['user_id']
-        data = request.get_json()
-        if 'content' not in data or 'post_id' not in data:
+        content = request.json.get('content')
+        post_id = request.json.get('post_id')
+        if not content or not post_id:
             return {'error': 'Content and post_id are required'}, 400
-        content = data['content']
-        post_id = data['post_id']
         try:
-            discussion_post = DiscussionPost.query.get(post_id)
-        except NoResultFound:
-            return {'error': 'Discussion post not found'}, 404
-        new_comment = Comment(content=content, user_id=user_id, post_id=post_id)
-        try:
+            new_comment = Comment(
+                content=content,
+                user_id=user_id,
+                post_id=post_id
+            )
             db.session.add(new_comment)
             db.session.commit()
             return new_comment.to_dict(), 201
         except Exception as e:
             db.session.rollback()
-            return {'message': str(e)}, 400
-        
+            return {'error': str(e)}, 500
+
 api.add_resource(Comment, "/comments")
+
 class GetComments(Resource):
     def get(self, post_id):
         try:
@@ -385,23 +390,7 @@ class CheckSession(Resource):
             return user.to_dict(rules=("-email", "bio")), 200
         return {"message": "Not Authorized"}, 403
 api.add_resource(CheckSession, '/check_session')
-class ViewOne(Resource):
-    def get(self, item_type, item_id):
-        if item_type == 'artwork':
-            item = db.session.query(Artwork).get(item_id)
-        elif item_type == 'discussion':
-            item = db.session.query(DiscussionPost).get(item_id)
-        else:
-            return {'message': 'Invalid item type'}, 400
-        if not item:
-            return {'message': f'{item_type.capitalize()} not found'}, 404
-        item_dict = item.to_dict() if hasattr(item, 'to_dict') else {}
-        if item_type == 'artwork':
-            pass
-        elif item_type == 'discussion':
-            pass
-        return item_dict, 200
-api.add_resource(ViewOne, '/views/<string:item_type>/<int:item_id>')
+
 class NewestArt(Resource):
     def get(self):
         try:
@@ -440,11 +429,25 @@ class SearchAPI(Resource):
             'discussion_posts': []
         }
         if query:
-            results['users'] = User.query.filter(User.username.ilike(f'%{query}%')).all()
-            results['artworks'] = Artwork.query.filter(Artwork.title.ilike(f'%{query}%')).all()
-            results['discussion_posts'] = DiscussionPost.query.filter(DiscussionPost.title.ilike(f'%{query}%')).all()
+           results['users'] = User.query.filter(User.username.ilike(f'%{query}%')).all()
+           results['artworks'] = Artwork.query.filter(Artwork.title.ilike(f'%{query}%')).all()
+           results['discussion_posts'] = DiscussionPost.query.filter(DiscussionPost.title.ilike(f'%{query}%')).all()
         if tag:
-            pass
+               # Filter artworks by tag
+            results['artworks'] = Artwork.query \
+                .join(Artwork.artwork_tags) \
+                .join(Tag, ArtworkTag.tag_id == Tag.tag_id) \
+                .filter(Tag.title.ilike(f'%{tag}%')) \
+                .filter(Artwork.title.ilike(f'%{query}%')) \
+                .all()
+
+            # Filter discussion posts by tag
+            results['discussion_posts'] = DiscussionPost.query \
+                .join(DiscussionPost.post_tags) \
+                .join(Tag, PostTag.tag_id == Tag.tag_id) \
+                .filter(Tag.title.ilike(f'%{tag}%')) \
+                .filter(DiscussionPost.title.ilike(f'%{query}%')) \
+                .all()
             
         results_list = {
             'users': [user.to_dict() for user in results['users']],

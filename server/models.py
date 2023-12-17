@@ -69,22 +69,8 @@ class Artwork(db.Model, SerializerMixin):
     artwork_tags = db.relationship('ArtworkTag', back_populates='artwork', cascade="all, delete-orphan")
     tags = association_proxy('artwork_tag', 'tag')
     user = db.relationship('User', back_populates='artworks')
-
-    #trying out a custom to_dict method to try to stop recursion 
-    #def to_dict(self):
-        #data = super(Artwork, self).to_dict(
-           #serialize_only=(
-                #'artwork_id',
-                #'title',
-               # 'created_at',
-               # 'updated_at',
-                #'image_url',
-                #'user_id'
-            #)
-       #)
-       # return data # trying to specify exactly what I want 
     #serialization rules
-    serialize_rules = ("-user.artworks", "-artwork_tags.artwork") # exclude artworks field in user relationship
+    serialize_rules = ("-user.artworks", "-artwork_tags.artwork","artwork_tags.tag.title") # exclude artworks field in user relationship
    
     @validates("image_url")
     def validate_image_url(self, _, image_url):
@@ -119,7 +105,7 @@ class DiscussionPost(db.Model, SerializerMixin):
     comments = db.relationship('Comment', back_populates='discussion_post', cascade="all, delete-orphan" )
     user = db.relationship('User', back_populates='discussion_posts')
     #serialize_rule
-    serialize_rules = ("-user.discussion_posts", "-post_tags.post", "-comments.discussion_post")
+    serialize_rules = ("-user.discussion_posts", "-post_tags.post", "-comments.discussion_post",  "post_tags.tag.title")
     #exclude discussion_posts and comments fields in user relationships
     
     @validates("body")
@@ -172,8 +158,8 @@ class Comment(db.Model, SerializerMixin):
     serialize_rules = ("-user.comments", "-discussion_post.comments",)
     #exclude comments field in user relationship
     #exclude comments field in discussion_post relationship
-    def __repr__(self):
-        return f'<Comment(comment_id={self.comment_id}, content={self.content})>'
+    #def __repr__(self):
+        #return f'<Comment(comment_id={self.comment_id}, content={self.content})>'
     
 class ArtworkTag(db.Model, SerializerMixin):
     __tablename__ = 'artwork_tags'
