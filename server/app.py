@@ -27,7 +27,7 @@ from models import PostTag
 
 @app.route('/')
 def index():
-    return '<h1>Project Server</h1>'
+    return '<h1>The Project Server</h1>'
 
 class AuthenticatedResource(Resource):
     def check_authentication(self):

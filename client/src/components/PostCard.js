@@ -3,8 +3,27 @@ import { Link } from "react-router-dom";
 import CommentSection from "./CommentSection";
 import "./PostCard.css";
 
-const PostCard = ({ title, id, post_tags, body, username, user }) => {
-  console.log("Post Tags in PostCard:", post_tags);
+const PostCard = ({
+  title,
+  post_id, 
+  post_tags,
+  body,
+  username,
+  user_id, 
+  currentUser, 
+  onDelete,
+  onEdit,
+}) => {
+  const isCreator = currentUser === user_id;
+
+  const handleDelete = () => {
+    onDelete(post_id);
+  };
+
+  const handleEdit = () => {
+    onEdit(post_id);
+  };
+
   return (
     <div className="post-card-container">
       <div className="post-username">Artist: {username}</div>
@@ -13,17 +32,23 @@ const PostCard = ({ title, id, post_tags, body, username, user }) => {
           <h2>{title}</h2>
           <div className="post-tags">
             Tags:{" "}
-            {post_tags.length > 0
+            {post_tags && post_tags.length > 0
               ? post_tags.map((tag) => tag.tag.title).join(", ")
               : "No tags"}
           </div>
           <div className="post-body">{body}</div>
         </div>
-        <Link to={`/posts/${id}`} className="view-details-link">
+        <Link to={`/posts/${post_id}`} className="view-details-link">
           View Details
         </Link>
       </div>
-      <CommentSection postId={id} user={user} />
+      <CommentSection postId={post_id} />
+      {isCreator && (
+        <div className="post-actions">
+          <button onClick={handleEdit}>Edit</button>
+          <button onClick={handleDelete}>Delete</button>
+        </div>
+      )}
     </div>
   );
 };

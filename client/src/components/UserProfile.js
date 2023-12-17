@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams, Link } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ArtworkCard from "./ArtworkCard";
 import PostCard from "./PostCard";
 
@@ -9,12 +9,24 @@ const UserProfile = () => {
   const [userInfo, setUserInfo] = useState({});
   const [artworks, setArtworks] = useState([]);
   const [discussionPosts, setDiscussionPosts] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
-    fetchUserInfo();
-    fetchArtworks();
-    fetchDiscussionPosts();
-  }, [user_id]);
+    checkCurrentUser();
+    if (currentUser === parseInt(user_id)) {
+      fetchUserInfo();
+      fetchArtworks();
+      fetchDiscussionPosts();
+    }
+  }, [user_id, currentUser]);
+
+  const checkCurrentUser = () => {
+    fetch("/check_session")
+      .then((response) => response.json())
+      .then((data) => {
+        setCurrentUser(data.user_id);
+      });
+  };
 
   const fetchUserInfo = () => {
     fetch(`/users/${user_id}`)
@@ -55,6 +67,40 @@ const UserProfile = () => {
       );
   };
 
+  const deleteArtwork = (artworkId) => {
+    if (currentUser === parseInt(user_id)) {
+      fetch(`/artworks/${artworkId}`, { method: "DELETE" })
+        .then(() => {
+          setArtworks(
+            artworks.filter((artwork) => artwork.artwork_id !== artworkId)
+          );
+        })
+        .catch((error) => console.error("Error deleting artwork:", error));
+    }
+  };
+
+  const editArtwork = (artwork_id) => {
+    navigate(`/edit-artwork/${artwork_id}`);
+  };
+
+   const deleteDiscussionPost = (post_id) => {
+     if (currentUser === parseInt(user_id)) {
+       fetch(`/discussion-posts/${post_id}`, { method: "DELETE" })
+         .then(() => {
+           setDiscussionPosts(
+             discussionPosts.filter((post) => post.post_id !== post_id)
+           );
+         })
+         .catch((error) => {
+           console.error("Error deleting discussion post:", error);
+           alert("Failed to delete post. Check console for errors.");
+         });
+     }
+   };
+    const editDiscussionPost = (post_id) => {
+      navigate(`/edit-discussion-post/${post_id}`);
+    };
+
   return (
     <div className="profile-container">
       <h2>{userInfo.username}'s Profile</h2>
@@ -62,7 +108,14 @@ const UserProfile = () => {
         <h3>My Artworks</h3>
         <div className="artworks-container">
           {artworks.map((artwork) => (
-            <ArtworkCard key={artwork.artwork_id} {...artwork} />
+            <ArtworkCard
+              key={artwork.artwork_id}
+              {...artwork}
+              user_id={artwork.user_id}
+              currentUser={currentUser}
+              onDelete={deleteArtwork}
+              onEdit={editArtwork}
+            />
           ))}
         </div>
       </div>
@@ -70,7 +123,13 @@ const UserProfile = () => {
         <h3>My Discussion Posts</h3>
         <div className="discussion-posts-container">
           {discussionPosts.map((post) => (
-            <PostCard key={post.post_id} id={post.post_id} {...post} />
+            <PostCard
+              key={post.post_id}
+              {...post}
+              currentUser={currentUser}
+              onDelete={deleteDiscussionPost}
+              onEdit={editDiscussionPost}
+            />
           ))}
         </div>
       </div>
