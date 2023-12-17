@@ -79,10 +79,6 @@ const UserProfile = () => {
     }
   };
 
-  const editArtwork = (artwork_id) => {
-    navigate(`/edit-artwork/${artwork_id}`);
-  };
-
    const deleteDiscussionPost = (post_id) => {
      if (currentUser === parseInt(user_id)) {
        fetch(`/discussion-posts/${post_id}`, { method: "DELETE" })
@@ -97,13 +93,65 @@ const UserProfile = () => {
          });
      }
    };
-    const editDiscussionPost = (post_id) => {
-      navigate(`/edit-discussion-post/${post_id}`);
+
+    const updateArtworkTitle = (artworkId, newTitle) => {
+      fetch(`/artworks/${artworkId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ title: newTitle }),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then(() => {
+          setArtworks(
+            artworks.map((artwork) =>
+              artwork.artwork_id === artworkId
+                ? { ...artwork, title: newTitle }
+                : artwork
+            )
+          );
+        })
+        .catch((error) =>
+          console.error("Error updating artwork title:", error)
+        );
+    };
+
+    const updateDiscussionPostTitle = (postId, newTitle) => {
+      fetch(`/discussion-posts/${postId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ title: newTitle }),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then(() => {
+          setDiscussionPosts(
+            discussionPosts.map((post) =>
+              post.post_id === postId ? { ...post, title: newTitle } : post
+            )
+          );
+        })
+        .catch((error) =>
+          console.error("Error updating discussion post title:", error)
+        );
     };
 
   return (
     <div className="profile-container">
       <h2>{userInfo.username}'s Profile</h2>
+      <div>{userInfo.bio}</div>
       <div>
         <h3>My Artworks</h3>
         <div className="artworks-container">
@@ -111,10 +159,13 @@ const UserProfile = () => {
             <ArtworkCard
               key={artwork.artwork_id}
               {...artwork}
+              image={artwork.image_url}
+              username={artwork.user.username}
               user_id={artwork.user_id}
               currentUser={currentUser}
               onDelete={deleteArtwork}
-              onEdit={editArtwork}
+              onEdit={updateArtworkTitle}
+              onTitleUpdate={updateArtworkTitle}
             />
           ))}
         </div>
@@ -126,9 +177,11 @@ const UserProfile = () => {
             <PostCard
               key={post.post_id}
               {...post}
+              username={post.user.username}
               currentUser={currentUser}
               onDelete={deleteDiscussionPost}
-              onEdit={editDiscussionPost}
+              onEdit={updateDiscussionPostTitle}
+              onTitleUpdate={updateDiscussionPostTitle}
             />
           ))}
         </div>

@@ -311,7 +311,7 @@ class EditDiscussionPosts(AuthenticatedResource):
         except Exception as e:
             db.session.rollback()
             return {'error': f"Failed to delete discussion post: {str(e)}"}, 400 
-api.add_resource(EditDiscussionPosts, "/discussion-posts/<int:id>")      
+api.add_resource(EditDiscussionPosts, "/discussion-posts/<int:post_id>")      
 class DiscussionPostDetail(Resource):
     def get(self, post_id):
         post = DiscussionPost.query.get_or_404(post_id, description=f'Discussion Post {post_id} not found')
