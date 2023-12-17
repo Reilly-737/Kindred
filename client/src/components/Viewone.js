@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import CommentSection from "./CommentSection";
 import PostCard from "./PostCard";
 
 const ViewOne = () => {
@@ -12,7 +11,7 @@ const ViewOne = () => {
       .then((response) => response.json())
       .then((data) => {
         console.log("Fetched Post Data:", data); 
-        setPost(data);
+        setPost(data.discussion_post);
       })
       .catch((error) => console.error("Error:", error));
   }, [post_id]);
@@ -28,7 +27,7 @@ const ViewOne = () => {
         username={post.username}
         post_tags={post.post_tags}
       />
-      <CommentSection postId={post_id} />
+      
     </div>
   );
 };
