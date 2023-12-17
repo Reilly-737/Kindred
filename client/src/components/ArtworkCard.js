@@ -11,8 +11,8 @@ const ArtworkCard = ({
   user_id,
   currentUser,
   onDelete,
-  onEdit, // You may not need this anymore if editing is done inline
-  onTitleUpdate, // New prop for handling title update
+  onEdit, 
+  onTitleUpdate, 
 }) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [editableTitle, setEditableTitle] = useState(title);

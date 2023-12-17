@@ -114,6 +114,7 @@ const Home = () => {
               <PostCard
                 key={discussion.post_id}
                 id={discussion.post_id}
+                username={discussion.user.username}
                 {...discussion}
               />
             ))}

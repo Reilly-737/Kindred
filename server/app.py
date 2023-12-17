@@ -7,14 +7,11 @@ from flask import jsonify
 from sqlalchemy.orm.exc import NoResultFound
 from flask_bcrypt import Bcrypt
 from sqlalchemy import or_
-# Local imports
+
 from config import app, db
 api = Api(app)
 bcrypt = Bcrypt(app)
-import ipdb
-# Instantiate app, set attributes
 
-# Add your model imports
 from models import User   
 from models import Artwork
 from models import Tag
@@ -23,12 +20,9 @@ from models import Comment
 from models import ArtworkTag
 from models import PostTag
 
-# Views go here!
-
 @app.route('/')
 def index():
     return '<h1>The Project Server</h1>'
-
 class AuthenticatedResource(Resource):
     def check_authentication(self):
         if 'user_id' not in session:
@@ -91,7 +85,21 @@ class UserById(AuthenticatedResource):
             return {'error': 'You do not have permission to delete this user'}, 403
 
 api.add_resource(UserById, "/users/<int:user_id>")
+class UpdatePassword(AuthenticatedResource):
+    def patch(self, user_id):
+        self.check_authentication()
+        authenticated_user_id = session.get('user_id')
+        if authenticated_user_id != int(user_id):
+            abort(403, description='You do not have permission to modify this user')
 
+        user = User.query.get_or_404(user_id, description=f"User {user_id} not found")
+        data = request.get_json()
+        hashed_password = bcrypt.generate_password_hash(data.get('password')).decode('utf-8')
+        user.password = hashed_password
+        db.session.commit()
+        return {}, 200
+
+api.add_resource(UpdatePassword, "/users/<int:user_id>/updatePassword")
 class NewUser(Resource):
   def post(self):
         try:
@@ -134,7 +142,6 @@ class Login(Resource):
             return {'message': 'Invalid Credentials'}, 403
 
 api.add_resource(Login, "/login")
-
 class Logout(Resource):
     def delete(self):
         if "user_id" in session:
@@ -142,7 +149,6 @@ class Logout(Resource):
         return {}, 204
 
 api.add_resource(Logout, '/logout')
-
 class Artworks(AuthenticatedResource):
     def get(self):
         try:
@@ -178,7 +184,6 @@ class Artworks(AuthenticatedResource):
             return {'message': str(e)}, 400
         
 api.add_resource(Artworks, "/artworks")
-
 class ArtworkById(Resource):
     def get(self, artwork_id):
         try: 
@@ -188,7 +193,6 @@ class ArtworkById(Resource):
             return {'message': str(e)}, 400
 
 api.add_resource(ArtworkById, "/artworks/<int:artwork_id>")
-
 class EditArtwork(AuthenticatedResource):
     def _check_permission(self, artwork):
         user_id = session.get('user_id')
@@ -229,7 +233,6 @@ class EditArtwork(AuthenticatedResource):
             return {'message': str(e)}, 400
 
 api.add_resource(EditArtwork, "/artworks/<int:artwork_id>")
-
 class DiscussionPosts(AuthenticatedResource):
     def get(self):
         try:
@@ -270,7 +273,6 @@ class DiscussionPosts(AuthenticatedResource):
             db.session.rollback()
             return {'message': str(e)}, 400
 api.add_resource(DiscussionPosts, "/discussion-posts")
-
 class DiscussionPostById(Resource):
     def get(self, post_id):
         try:
@@ -340,7 +342,6 @@ class Comment(AuthenticatedResource):
             return {'error': str(e)}, 500
 
 api.add_resource(Comment, "/comments")
-
 class GetComments(Resource):
     def get(self, post_id):
         try:
@@ -374,7 +375,6 @@ class DeleteComment(AuthenticatedResource):
             db.session.rollback()
             return {'message': str(e)}, 400
 api.add_resource(DeleteComment, '/comments/<int:comment_id>')
-
 class Tags(Resource):
     def get(self):
         tags = Tag.query.all()
@@ -390,7 +390,6 @@ class CheckSession(Resource):
             return user.to_dict(rules=("-email", "bio")), 200
         return {"message": "Not Authorized"}, 403
 api.add_resource(CheckSession, '/check_session')
-
 class NewestArt(Resource):
     def get(self):
         try:

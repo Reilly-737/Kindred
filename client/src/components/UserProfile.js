@@ -10,6 +10,9 @@ const UserProfile = () => {
   const [artworks, setArtworks] = useState([]);
   const [discussionPosts, setDiscussionPosts] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
+  const [isEditBioMode, setIsEditBioMode] = useState(false);
+  const [editableBio, setEditableBio] = useState("");
+  const [newPassword, setNewPassword] = useState("");
 
   useEffect(() => {
     checkCurrentUser();
@@ -67,6 +70,8 @@ const UserProfile = () => {
       );
   };
 
+
+
   const deleteArtwork = (artworkId) => {
     if (currentUser === parseInt(user_id)) {
       fetch(`/artworks/${artworkId}`, { method: "DELETE" })
@@ -78,7 +83,6 @@ const UserProfile = () => {
         .catch((error) => console.error("Error deleting artwork:", error));
     }
   };
-
    const deleteDiscussionPost = (post_id) => {
      if (currentUser === parseInt(user_id)) {
        fetch(`/discussion-posts/${post_id}`, { method: "DELETE" })
@@ -148,10 +152,95 @@ const UserProfile = () => {
         );
     };
 
+    
+  const updateBio = () => {
+    fetch(`/users/${currentUser}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ bio: editableBio }),
+    })
+      .then((response) => response.json())
+      .then((updatedUserInfo) => {
+        setUserInfo(updatedUserInfo);
+        setIsEditBioMode(false);
+      })
+      .catch((error) => console.error("Error updating bio:", error));
+  };
+
+  const updatePassword = () => {
+    fetch(`/users/${currentUser}/updatePassword`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ password: newPassword }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Password update failed");
+        }
+        setNewPassword("");
+        alert("Password updated successfully");
+      })
+      .catch((error) => console.error("Error updating password:", error));
+  };
+
+  const deleteUserProfile = () => {
+    if (window.confirm("Are you sure you want to delete your profile?")) {
+      fetch(`/users/${currentUser}`, { method: "DELETE" })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Failed to delete profile");
+          }
+          navigate("/"); // Adjust redirection as necessary
+        })
+        .catch((error) => console.error("Error deleting profile:", error));
+    }
+  };
+
+  useEffect(() => {
+    checkCurrentUser();
+    if (currentUser === parseInt(user_id)) {
+      fetchUserInfo();
+      fetchArtworks();
+      fetchDiscussionPosts();
+    }
+  }, [user_id, currentUser]);
+
   return (
     <div className="profile-container">
       <h2>{userInfo.username}'s Profile</h2>
-      <div>{userInfo.bio}</div>
+    
+      {isEditBioMode ? (
+        <div>
+          <textarea
+            value={editableBio}
+            onChange={(e) => setEditableBio(e.target.value)}
+          />
+          <button onClick={updateBio}>Save Bio</button>
+        </div>
+      ) : (
+        <div>
+          <p>{userInfo.bio}</p>
+          {currentUser === parseInt(user_id) && (
+            <button onClick={() => setIsEditBioMode(true)}>Edit Bio</button>
+          )}
+        </div>
+      )}
+      {currentUser === parseInt(user_id) && (
+        <div>
+          <input
+            type="password"
+            placeholder="New Password"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+          />
+          <button onClick={updatePassword}>Change Password</button>
+          <button onClick={deleteUserProfile}>Delete Profile</button>
+        </div>
+      )}
       <div>
         <h3>My Artworks</h3>
         <div className="artworks-container">

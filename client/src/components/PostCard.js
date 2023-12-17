@@ -12,7 +12,7 @@ const PostCard = ({
   user_id,
   currentUser,
   onDelete,
-  onTitleUpdate, // Changed from onEdit to onTitleUpdate
+  onTitleUpdate, 
 }) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [editableTitle, setEditableTitle] = useState(title);
@@ -28,8 +28,7 @@ const PostCard = ({
   };
 
   const handleSave = () => {
-    onTitleUpdate(post_id, editableTitle); // Call the update function with new title
-    setIsEditMode(false);
+    onTitleUpdate(post_id, editableTitle); 
   };
 
   const handleTitleChange = (e) => {
