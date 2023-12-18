@@ -29,6 +29,7 @@ const UserProfile = () => {
     fetch("/check_session")
       .then((response) => response.json())
       .then((data) => {
+       
         setCurrentUser(data.user_id);
       });
   };
@@ -267,6 +268,7 @@ const UserProfile = () => {
               onDelete={deleteArtwork}
               onEdit={updateArtworkTitle}
               onTitleUpdate={updateArtworkTitle}
+              isProfileView={true}
             />
           ))}
         </div>

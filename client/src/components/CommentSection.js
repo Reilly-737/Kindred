@@ -5,7 +5,7 @@ const CommentSection = ({ post_id, currentUser}) => {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [showComments, setShowComments] = useState(false);
-
+ console.log(currentUser);
   useEffect(() => {
     const fetchComments = async () => {
       if (showComments) {

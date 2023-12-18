@@ -18,7 +18,7 @@ const PostCard = ({
   const [editableTitle, setEditableTitle] = useState(title);
 
   const isCreator = currentUser === user_id;
-
+ console.log(currentUser)
   const handleDelete = () => {
     onDelete(post_id);
   };
@@ -66,7 +66,7 @@ const PostCard = ({
           </Link>
         )}
       </div>
-      <CommentSection post_id={post_id} user={currentUser} />
+      <CommentSection post_id={post_id} currentUser={currentUser} />
       {isCreator && !isEditMode && (
         <div className="post-actions">
           <button onClick={handleEdit}>Edit</button>

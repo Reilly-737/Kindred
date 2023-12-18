@@ -19,6 +19,7 @@ const ArtworkCard = ({
   const [editableTitle, setEditableTitle] = useState(title);
 
   const isCreator = currentUser === user_id;
+  console.log("currentUser:", currentUser, "user_id:", user_id, "isCreator:", isCreator);
 
   const handleDelete = () => {
     onDelete(artwork_id);
