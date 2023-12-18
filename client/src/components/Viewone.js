@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import PostCard from "./PostCard";
+import { useUser } from "./UserContext";
 
 const ViewOne = () => {
   const { post_id } = useParams();
   const [post, setPost] = useState(null);
+  const { currentUser } = useUser(); 
 
   useEffect(() => {
     fetch(`/discussion-posts/${post_id}`)
@@ -22,12 +24,13 @@ const ViewOne = () => {
     <div>
       <PostCard
         title={post.title}
+        post_id={post.post_id}
         id={post.post_id}
         body={post.body}
         username={post.username}
         post_tags={post.post_tags}
+        currentUser={currentUser}
       />
-      
     </div>
   );
 };
