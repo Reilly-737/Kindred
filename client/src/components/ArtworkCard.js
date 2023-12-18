@@ -11,8 +11,9 @@ const ArtworkCard = ({
   user_id,
   currentUser,
   onDelete,
-  onEdit, 
-  onTitleUpdate, 
+  onEdit,
+  onTitleUpdate,
+  isProfileView,
 }) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [editableTitle, setEditableTitle] = useState(title);
@@ -28,7 +29,7 @@ const ArtworkCard = ({
   };
 
   const handleSave = () => {
-    onTitleUpdate(artwork_id, editableTitle); 
+    onTitleUpdate(artwork_id, editableTitle);
     setIsEditMode(false);
   };
 
@@ -53,7 +54,7 @@ const ArtworkCard = ({
         ) : (
           <>
             <h2>{title}</h2>
-            {isCreator && (
+            {isCreator && isProfileView && (
               <div>
                 <button onClick={handleEdit}>Edit</button>
                 <button onClick={handleDelete}>Delete</button>

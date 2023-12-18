@@ -155,11 +155,11 @@ class Comment(db.Model, SerializerMixin):
     discussion_post = db.relationship('DiscussionPost', back_populates='comments')
    
     #serialize rules
-    serialize_rules = ("-user.comments", "-discussion_post.comments",)
+    serialize_rules = ("-user", "-discussion_post",)
     #exclude comments field in user relationship
     #exclude comments field in discussion_post relationship
-    #def __repr__(self):
-        #return f'<Comment(comment_id={self.comment_id}, content={self.content})>'
+    def __repr__(self):
+        return f'<Comment(comment_id={self.comment_id}, content={self.content})>'
     
 class ArtworkTag(db.Model, SerializerMixin):
     __tablename__ = 'artwork_tags'

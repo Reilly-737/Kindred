@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import ArtworkCard from "./ArtworkCard";
 import PostCard from "./PostCard";
+import { formatDate } from "./utils";
 
 const UserProfile = () => {
   const { user_id } = useParams();
@@ -13,6 +14,7 @@ const UserProfile = () => {
   const [isEditBioMode, setIsEditBioMode] = useState(false);
   const [editableBio, setEditableBio] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [isChangePasswordMode, setIsChangePasswordMode] = useState(false);
 
   useEffect(() => {
     checkCurrentUser();
@@ -69,8 +71,6 @@ const UserProfile = () => {
         console.error("Error fetching discussion posts:", error)
       );
   };
-
-
 
   const deleteArtwork = (artworkId) => {
     if (currentUser === parseInt(user_id)) {
@@ -152,7 +152,6 @@ const UserProfile = () => {
         );
     };
 
-    
   const updateBio = () => {
     fetch(`/users/${currentUser}`, {
       method: "PATCH",
@@ -194,7 +193,7 @@ const UserProfile = () => {
           if (!response.ok) {
             throw new Error("Failed to delete profile");
           }
-          navigate("/"); // Adjust redirection as necessary
+          navigate("/"); 
         })
         .catch((error) => console.error("Error deleting profile:", error));
     }
@@ -212,7 +211,6 @@ const UserProfile = () => {
   return (
     <div className="profile-container">
       <h2>{userInfo.username}'s Profile</h2>
-    
       {isEditBioMode ? (
         <div>
           <textarea
@@ -231,17 +229,31 @@ const UserProfile = () => {
       )}
       {currentUser === parseInt(user_id) && (
         <div>
-          <input
-            type="password"
-            placeholder="New Password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-          />
-          <button onClick={updatePassword}>Change Password</button>
+          {isChangePasswordMode ? (
+            <div>
+              <input
+                type="password"
+                placeholder="New Password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+              />
+              <button onClick={updatePassword}>Change Password</button>
+              <button onClick={() => setIsChangePasswordMode(false)}>
+                Cancel
+              </button>
+            </div>
+          ) : (
+            <button onClick={() => setIsChangePasswordMode(true)}>
+              Change Password
+            </button>
+          )}
           <button onClick={deleteUserProfile}>Delete Profile</button>
         </div>
       )}
       <div>
+        <div className="account-creation-date">
+          Member since: {formatDate(userInfo.created_at)}{" "}
+        </div>
         <h3>My Artworks</h3>
         <div className="artworks-container">
           {artworks.map((artwork) => (
@@ -279,4 +291,5 @@ const UserProfile = () => {
   );
 };
 
-export default UserProfile;
+export default UserProfile
+

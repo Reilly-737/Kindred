@@ -2,7 +2,6 @@ import React, { createContext, useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import Header from "./Header";
 import AlertBar from "./AlertBar";
-
 export const TagsContext = createContext();
 
 const App = ({ children }) => {
@@ -65,7 +64,6 @@ const App = ({ children }) => {
 
   return (
     <div>
-    
       <Header
         user={user}
         updateUser={updateUser}
@@ -80,10 +78,13 @@ const App = ({ children }) => {
           handleSnackType={handleSnackType}
         />
       )}
-      <div id="outlet">
-        <Outlet context={ctx} />
-      </div>
-      <TagsContext.Provider value={{ tags }}>{children}</TagsContext.Provider>
+   
+        <div id="outlet">
+          <Outlet context={ctx} />
+        </div>
+
+        <TagsContext.Provider value={{ tags }}>{children}</TagsContext.Provider>
+
     </div>
   );
 };

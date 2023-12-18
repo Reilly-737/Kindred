@@ -14,7 +14,6 @@ const Login = () => {
       ...credentials,
       [e.target.name]: e.target.value,
     });
-   console.log(credentials);
   };
 
   const handleSubmit = async (e) => {
@@ -32,7 +31,6 @@ const Login = () => {
           resp
             .json()
             .then((userObj) => {
-              console.log(userObj)
               updateUser(userObj);
               navigate(`/profile/${userObj.user_id}`);
               handleSnackType("success");

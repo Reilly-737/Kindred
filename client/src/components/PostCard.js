@@ -66,7 +66,7 @@ const PostCard = ({
           </Link>
         )}
       </div>
-      <CommentSection postId={post_id} />
+      <CommentSection post_id={post_id} user={currentUser} />
       {isCreator && !isEditMode && (
         <div className="post-actions">
           <button onClick={handleEdit}>Edit</button>

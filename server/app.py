@@ -132,6 +132,7 @@ class Login(Resource):
 
             if user and bcrypt.check_password_hash(user.password, data.get('password')):
                 session['user_id'] = user.user_id
+                session.permanent = True
                 print("Login successful")
                 return {'message': 'Login successful', 'user_id': user.user_id}, 200
 
@@ -320,14 +321,21 @@ class DiscussionPostDetail(Resource):
         return post.to_dict(), 200
 
 api.add_resource(DiscussionPostDetail, '/discussion-posts/<int:post_id>')
-class Comment(AuthenticatedResource):
-    def post(self):
+class CommentsByPostId(AuthenticatedResource):
+    def get(self, post_id):
+        try:
+            comments = db.session.query(Comment).filter(Comment.post_id == post_id).all()
+            comments_data = [self.convert_to_dict(comment) for comment in comments]
+            return {'comments': comments_data}, 200
+        except Exception as e:
+            return {'error': str(e)}, 500
+
+    def post(self, post_id):
         self.check_authentication()
         user_id = session['user_id']
         content = request.json.get('content')
-        post_id = request.json.get('post_id')
-        if not content or not post_id:
-            return {'error': 'Content and post_id are required'}, 400
+        if not content:
+            return {'error': 'Content is required'}, 400
         try:
             new_comment = Comment(
                 content=content,
@@ -341,16 +349,7 @@ class Comment(AuthenticatedResource):
             db.session.rollback()
             return {'error': str(e)}, 500
 
-api.add_resource(Comment, "/comments")
-class GetComments(Resource):
-    def get(self, post_id):
-        try:
-            comments = db.session.query(Comment).filter(Comment.post_id == post_id).all()
-            comments_data = [self.convert_to_dict(comment) for comment in comments]
-            return make_response({'comments': comments_data}), 200
-        except Exception as e:
-            return make_response({'error': str(e)}), 500
-    @staticmethod #because it's more of a utility function?
+    @staticmethod
     def convert_to_dict(comment):
         return {
             'comment_id': comment.comment_id,
@@ -359,7 +358,7 @@ class GetComments(Resource):
             'user_id': comment.user_id,
             'post_id': comment.post_id
         }
-api.add_resource(GetComments, "/discussion-post/comments/<int:post_id>")
+api.add_resource(CommentsByPostId, "/discussion-post/<int:post_id>/comments")
 class DeleteComment(AuthenticatedResource):
     def delete(self, comment_id):
         self.check_authentication()
@@ -374,6 +373,7 @@ class DeleteComment(AuthenticatedResource):
         except Exception as e:
             db.session.rollback()
             return {'message': str(e)}, 400
+
 api.add_resource(DeleteComment, '/comments/<int:comment_id>')
 class Tags(Resource):
     def get(self):

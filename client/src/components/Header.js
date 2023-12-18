@@ -3,8 +3,10 @@ import { Navbar, NavbarBrand, Nav, NavItem, NavLink } from "reactstrap";
 import { NavLink as RouterNavLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
+
 const Header = ({ user, updateUser, setAlertMessage, handleSnackType }) => {
   const navigate = useNavigate();
+
   const handleLogout = () => {
     fetch("/logout", { method: "DELETE" })
       .then(() => {

@@ -69,8 +69,8 @@ const SearchResultsList = ({ results }) => {
             image={artwork.image_url}
             title={artwork.title}
             id={artwork.artwork_id}
-            username={artwork.user.username} 
-            tags={artwork.tag} 
+            username={artwork.user.username}
+            artwork_tags={artwork.artwork_tags}
           />
         ))}
       {results.users &&

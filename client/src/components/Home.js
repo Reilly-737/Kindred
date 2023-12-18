@@ -84,8 +84,11 @@ const Home = () => {
               <ArtworkCard
                 key={artist.id}
                 artist={artist}
+                title={artist.title}
+                artwork_tags={artist.artwork_tags}
                 username={artist.user.username}
                 image={artist.image_url}
+                isProfileView={false}
               />
             ))}
           </div>
@@ -101,7 +104,8 @@ const Home = () => {
                 username={artwork.user.username}
                 title={artwork.title}
                 id={artwork.artwork_id}
-                tags={artwork.tags}
+                artwork_tags={artwork.artwork_tags}
+                isProfileView={false}
               />
             ))}
           </div>
