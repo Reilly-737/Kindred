@@ -50,7 +50,7 @@ const Header = ({ user, updateUser, setAlertMessage, handleSnackType }) => {
           </NavItem>
           {user ? (
             <NavItem>
-              <NavLink tag={RouterNavLink} to={`/profile/${user.id}`} className="custom-button">
+              <NavLink tag={RouterNavLink} to={`/profile/${user.user_id}`} className="custom-button">
                 profile
               </NavLink>
             </NavItem>

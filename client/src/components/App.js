@@ -2,7 +2,10 @@ import React, { createContext, useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import Header from "./Header";
 import AlertBar from "./AlertBar";
+import { UserProvider } from "./UserContext";
+
 export const TagsContext = createContext();
+
 
 const App = ({ children }) => {
   const [message, setMessage] = useState(null);
@@ -31,7 +34,7 @@ const App = ({ children }) => {
   useEffect(() => {
     const fetchTags = async () => {
       try {
-        const response = await fetch("/tags"); 
+        const response = await fetch("/tags");
         if (response.ok) {
           const tagsData = await response.json();
           setTags(tagsData);
@@ -64,27 +67,26 @@ const App = ({ children }) => {
 
   return (
     <div>
-      <Header
-        user={user}
-        updateUser={updateUser}
-        setAlertMessage={setAlertMessage}
-        handleSnackType={handleSnackType}
-      />
-      {message && (
-        <AlertBar
-          message={message}
-          snackType={snackType}
+      <UserProvider>
+        <Header
+          user={user}
+          updateUser={updateUser}
           setAlertMessage={setAlertMessage}
           handleSnackType={handleSnackType}
         />
-      )}
-   
+        {message && (
+          <AlertBar
+            message={message}
+            snackType={snackType}
+            setAlertMessage={setAlertMessage}
+            handleSnackType={handleSnackType}
+          />
+        )}
         <div id="outlet">
           <Outlet context={ctx} />
         </div>
-
         <TagsContext.Provider value={{ tags }}>{children}</TagsContext.Provider>
-
+      </UserProvider>
     </div>
   );
 };

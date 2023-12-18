@@ -31,10 +31,11 @@ const Login = () => {
           resp
             .json()
             .then((userObj) => {
-              updateUser(userObj);
+          
+              updateUser({user_id:userObj.user_id});
               navigate(`/profile/${userObj.user_id}`);
-              handleSnackType("success");
-              setAlertMessage("Welcome back!");
+              //handleSnackType("success");
+              //setAlertMessage("Welcome back!");
             })
         
         } else {
