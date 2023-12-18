@@ -120,6 +120,7 @@ const Home = () => {
                 id={discussion.post_id}
                 username={discussion.user.username}
                 {...discussion}
+                isOnHomePage={true}
               />
             ))}
           </div>

@@ -15,10 +15,6 @@
    console.log(user)
    const [artworks, setArtworks] = useState([]);
    const [discussionPosts, setDiscussionPosts] = useState([]);
-   const [isEditBioMode, setIsEditBioMode] = useState(false);
-   const [editableBio, setEditableBio] = useState(
-     currentUser ? currentUser.bio : ""
-   );
    const [newPassword, setNewPassword] = useState("");
    const [isChangePasswordMode, setIsChangePasswordMode] = useState(false);
 
@@ -26,7 +22,6 @@
      if (user && user.user_id === parseInt(user_id)) {
        fetchArtworks();
        fetchDiscussionPosts();
-       setEditableBio(currentUser.bio || "");
      }
    }, [user_id, user]);
 
@@ -54,21 +49,6 @@
        .catch((error) =>
          console.error("Error fetching discussion posts:", error)
        );
-   };
-
-   const updateBio = () => {
-     fetch(`/users/${currentUser.user_id}/updateBio`, {
-       method: "PATCH",
-       headers: {
-         "Content-Type": "application/json",
-       },
-       body: JSON.stringify({ bio: editableBio }),
-     })
-       .then((response) => response.json())
-       .then((updatedUserInfo) => {
-         setIsEditBioMode(false);
-       })
-       .catch((error) => console.error("Error updating bio:", error));
    };
 
    const updatePassword = () => {
@@ -102,7 +82,7 @@
      }
    };
       const deleteDiscussionPost = (post_id) => {
-        if (currentUser === parseInt(user_id)) {
+        if (currentUser.user_id === parseInt(user_id)) {
           fetch(`/discussion-posts/${post_id}`, { method: "DELETE" })
             .then(() => {
               setDiscussionPosts(
@@ -116,7 +96,7 @@
         }
       };
         const deleteArtwork = (artworkId) => {
-          if (currentUser === parseInt(user_id)) {
+          if (currentUser.user_id === parseInt(user_id)) {
             fetch(`/artworks/${artworkId}`, { method: "DELETE" })
               .then(() => {
                 setArtworks(
@@ -184,22 +164,7 @@
    return (
      <div className="profile-container">
        <h2>{currentUser ? `${currentUser.username}'s Profile` : "Profile"}</h2>
-       {isEditBioMode ? (
-         <div>
-           <textarea
-             value={editableBio}
-             onChange={(e) => setEditableBio(e.target.value)}
-           />
-           <button onClick={updateBio}>Save Bio</button>
-         </div>
-       ) : (
-         <div>
-           <p>{currentUser ? currentUser.bio : "No bio available"}</p>
-           {currentUser && currentUser.user_id === parseInt(user_id) && (
-             <button onClick={() => setIsEditBioMode(true)}>Edit Bio</button>
-           )}
-         </div>
-       )}
+       <p>{currentUser ? currentUser.bio : "No bio available"}</p>
        {currentUser && currentUser.user_id === parseInt(user_id) && (
          <div>
            {isChangePasswordMode ? (
@@ -257,6 +222,7 @@
                onDelete={deleteDiscussionPost}
                onEdit={updateDiscussionPostTitle}
                onTitleUpdate={updateDiscussionPostTitle}
+               isOnHomePage={false}
              />
            ))}
          </div>

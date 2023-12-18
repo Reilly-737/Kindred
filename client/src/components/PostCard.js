@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import CommentSection from "./CommentSection";
 import "./PostCard.css";
+import { useUser } from "./UserContext";
 
 const PostCard = ({
   title,
@@ -10,15 +11,16 @@ const PostCard = ({
   body,
   username,
   user_id,
-  currentUser,
   onDelete,
-  onTitleUpdate, 
+  onTitleUpdate,
+  isOnHomePage,
 }) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [editableTitle, setEditableTitle] = useState(title);
 
-  const isCreator = currentUser === user_id;
- console.log(currentUser)
+  const { currentUser } = useUser();
+  const isCreator = currentUser && currentUser.user_id === user_id;
+  console.log(currentUser);
   const handleDelete = () => {
     onDelete(post_id);
   };
@@ -28,12 +30,13 @@ const PostCard = ({
   };
 
   const handleSave = () => {
-    onTitleUpdate(post_id, editableTitle); 
+    onTitleUpdate(post_id, editableTitle);
   };
 
   const handleTitleChange = (e) => {
     setEditableTitle(e.target.value);
   };
+  const showEditDeleteButtons = !isOnHomePage && isCreator && !isEditMode;
 
   return (
     <div className="post-card-container">
@@ -66,13 +69,14 @@ const PostCard = ({
           </Link>
         )}
       </div>
-      <CommentSection post_id={post_id} currentUser={currentUser} />
-      {isCreator && !isEditMode && (
+      {showEditDeleteButtons && (
         <div className="post-actions">
           <button onClick={handleEdit}>Edit</button>
           <button onClick={handleDelete}>Delete</button>
         </div>
       )}
+      <CommentSection post_id={post_id} currentUser={currentUser.user_id} />
+     
     </div>
   );
 };

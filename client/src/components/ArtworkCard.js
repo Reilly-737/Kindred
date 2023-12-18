@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./ArtworkCard.css";
 import { Link } from "react-router-dom";
-
+import { useUser } from "./UserContext";
 const ArtworkCard = ({
   artwork_id,
   image,
@@ -9,7 +9,6 @@ const ArtworkCard = ({
   artwork_tags,
   username,
   user_id,
-  currentUser,
   onDelete,
   onEdit,
   onTitleUpdate,
@@ -17,9 +16,9 @@ const ArtworkCard = ({
 }) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [editableTitle, setEditableTitle] = useState(title);
+  const { currentUser } = useUser();
+  const isCreator = currentUser && currentUser.user_id === user_id;
 
-  const isCreator = currentUser === user_id;
-  console.log("currentUser:", currentUser, "user_id:", user_id, "isCreator:", isCreator);
 
   const handleDelete = () => {
     onDelete(artwork_id);
