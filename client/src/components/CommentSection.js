@@ -84,10 +84,10 @@ const CommentSection = ({ post_id, currentUser}) => {
               comments.map((comment) => (
                 <div key={comment.comment_id} className="list-group-item">
                   <p className="mb-1">
-                    <strong>{currentUser.user_id.username}:</strong> {comment.content}
+                    <strong>{comment.username}:</strong> {comment.content}
                   </p>
                   <small>{moment(comment.created_at).fromNow()}</small>
-                  {currentUser && currentUser.user_id === comment.user_id && (
+                  {canDeleteComment(comment.user_id) && (
                     <button
                       className="btn btn-danger btn-sm"
                       onClick={() => handleDeleteComment(comment.comment_id)}

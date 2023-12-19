@@ -20,7 +20,7 @@ const PostCard = ({
 
   const { currentUser } = useUser();
   const isCreator = currentUser && currentUser.user_id === user_id;
-  console.log(currentUser);
+
   const handleDelete = () => {
     onDelete(post_id);
   };
