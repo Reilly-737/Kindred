@@ -28,11 +28,10 @@ const Login = () => {
     })
       .then((resp) => {
         if (resp.ok) {
-          resp
-            .json()
+          resp.json()
             .then((userObj) => {
-          
-              updateUser({user_id:userObj.user_id});
+              console.log("Login successful, user object:", userObj); // Log user object
+              updateUser({ user_id: userObj.user_id });
               navigate(`/profile/${userObj.user_id}`);
               //handleSnackType("success");
               //setAlertMessage("Welcome back!");

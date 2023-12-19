@@ -145,8 +145,9 @@ class Login(Resource):
 api.add_resource(Login, "/login")
 class Logout(Resource):
     def delete(self):
-        if "user_id" in session:
-            del session["user_id"]
+        session.clear()
+        #if "user_id" in session:
+         #   del session["user_id"]
         return {}, 204
 
 api.add_resource(Logout, '/logout')

@@ -13,10 +13,12 @@ export const UserProvider = ({ children }) => {
     fetch("/check_session")
       .then((response) => response.json())
       .then((data) => {
+        console.log("Session check data:", data); // Log session data
         if (data && data.user_id) {
           fetch(`/users/${data.user_id}`)
             .then((response) => response.json())
             .then((userData) => {
+              console.log("Fetched user data:", userData); // Log user data
               if (userData) {
                 setUser(userData);
               }

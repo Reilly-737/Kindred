@@ -69,7 +69,7 @@ class Artwork(db.Model, SerializerMixin):
     artwork_tags = db.relationship('ArtworkTag', back_populates='artwork', cascade="all, delete-orphan")
     tags = association_proxy('artwork_tag', 'tag')
     user = db.relationship('User', back_populates='artworks')
-    #serialization rules
+    #serialization_rules = ("-artwork_tags", "-user")
     serialize_rules = ("-user.artworks", "-artwork_tags.artwork","artwork_tags.tag.title") # exclude artworks field in user relationship
    
     @validates("image_url")

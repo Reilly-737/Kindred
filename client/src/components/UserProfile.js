@@ -19,6 +19,7 @@
    const [isChangePasswordMode, setIsChangePasswordMode] = useState(false);
 
    useEffect(() => {
+     console.log("Current user in UserProfile:", currentUser); // Log current user
      if (user && user.user_id === parseInt(user_id)) {
        fetchArtworks();
        fetchDiscussionPosts();
