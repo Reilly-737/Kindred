@@ -60,7 +60,7 @@ const AboutUs = () => {
           <img
             src="https://i.imgur.com/dPAXC9U.jpg"
             alt="Admin"
-            style={{ maxWidth: "30%", borderRadius: "4px", marginTop: "10px" }}
+            style={{ maxWidth: "15%", borderRadius: "3px", marginTop: "5px" }}
           />
           <div className="social-links mt-3">
             <a

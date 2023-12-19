@@ -1,5 +1,4 @@
 
-
 :root {
   --bg: #282c34;
   --header: #fff;
@@ -63,7 +62,6 @@ body {
   max-width: 800px;
   margin: 0 auto;
 }
-
 .new-artists-cards {
   margin-top: 20px;
 }
@@ -100,3 +98,7 @@ body {
 .artwork-discussion-list li {
   margin-bottom: 8px;
 }
+
+
+
+

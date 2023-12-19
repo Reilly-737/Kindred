@@ -5,34 +5,34 @@
   max-width: 300px;
   min-width: 200;
   margin-bottom: 20px; /* space between cards */
-  background: rgb(207, 204, 235);
+  background: rgba(197, 192, 239, 0.936);
   position: relative;
   font-size: 1rem; /* Adjust font size as needed */
   text-transform: uppercase;
   letter-spacing: 0.3ch;
-  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 5px 5px 10px rgba(104, 68, 224, 0.2);
   overflow: hidden;
   border-radius: 15px;
   margin-bottom: 20px;
 }
 
 .artwork-card:nth-child(3n+1) {
-  border: solid 5px hsla(0, 95%, 35%, 1);
+  border: solid 5px  rgb(212, 152, 238);
 }
 
 .artwork-card:nth-child(3n+2) {
-  border: dotted 5px hsla(0, 95%, 35%, 1);
+  border: dotted 5px rgb(70, 138, 235);
 }
 
 .artwork-card:nth-child(3n+3) {
-  border: dashed 5px hsla(0, 95%, 35%, 1);
+  border: dashed 5px rgb(151, 136, 236);
 }
 
 .artwork-image {
   max-width: 100%;
-  max-height: 600px; /* adjust as necessary */
+  max-height: 600px; 
   object-fit: cover;
-  margin-bottom: 10px; /* space between image and details */
+  margin-bottom: 10px; 
   border-radius: 20px; 
 }
 
@@ -40,7 +40,7 @@
   position: center;
   top: 10px;
   left: 10px;
-  background-color: rgba(170, 244, 136, 0.7);
+  background-color: rgba(199, 243, 179, 0.895);
   padding: 5px;
   border-radius: 5px;
   font-size: 0.9em;
@@ -53,12 +53,12 @@
 .artwork-container {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center; /* Centers the cards */
-  gap: 20px; /* Space between cards */
-  padding: 20px; /* Padding around the entire container */
+  justify-content: center; 
+  gap: 20px; 
+  padding: 20px;
 }
 
 .artwork-username {
-  color: red; /* or any contrasting color */
+  color: rgb(0, 94, 255); 
   font-size: 1.2em;
 }

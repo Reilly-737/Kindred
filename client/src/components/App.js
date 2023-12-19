@@ -1,8 +1,10 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { useContext, createContext, useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import Header from "./Header";
 import AlertBar from "./AlertBar";
 import { UserProvider } from "./UserContext";
+import { StyleProvider} from "../contextstyle/StyleProvider";
+import { StyleContext } from "../contextstyle/StyleContext";
 
 export const TagsContext = createContext();
 
@@ -12,6 +14,7 @@ const App = ({ children }) => {
   const [snackType, setSnackType] = useState("");
   const [user, setUser] = useState(null);
   const [tags, setTags] = useState([]);
+  const { theme } = useContext(StyleContext);
 
   useEffect(() => {
     fetch("/check_session")
@@ -66,28 +69,34 @@ const App = ({ children }) => {
   };
 
   return (
-    <div>
-      <UserProvider>
-        <Header
-          user={user}
-          updateUser={updateUser}
-          setAlertMessage={setAlertMessage}
-          handleSnackType={handleSnackType}
-        />
-        {message && (
-          <AlertBar
-            message={message}
-            snackType={snackType}
-            setAlertMessage={setAlertMessage}
-            handleSnackType={handleSnackType}
-          />
-        )}
-        <div id="outlet">
-          <Outlet context={ctx} />
+    <StyleProvider>
+      <div style={{ background: theme.background }}>
+        <div>
+          <UserProvider>
+            <Header
+              user={user}
+              updateUser={updateUser}
+              setAlertMessage={setAlertMessage}
+              handleSnackType={handleSnackType}
+            />
+            {message && (
+              <AlertBar
+                message={message}
+                snackType={snackType}
+                setAlertMessage={setAlertMessage}
+                handleSnackType={handleSnackType}
+              />
+            )}
+            <div id="outlet">
+              <Outlet context={ctx} />
+            </div>
+            <TagsContext.Provider value={{ tags }}>
+              {children}
+            </TagsContext.Provider>
+          </UserProvider>
         </div>
-        <TagsContext.Provider value={{ tags }}>{children}</TagsContext.Provider>
-      </UserProvider>
-    </div>
+      </div>
+    </StyleProvider>
   );
 };
 

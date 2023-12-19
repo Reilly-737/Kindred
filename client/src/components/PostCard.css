@@ -4,8 +4,8 @@
   margin: 20px auto; /* Center card on page with margin */
   background: rgb(161, 197, 238);
   border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
-  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
-  border: 3px solid hsla(0, 95%, 35%, 1);
+  box-shadow: 5px 5px 10px rgba(183, 40, 227, 0.2);
+  border: 3px solid rgb(212, 152, 238);
   overflow-y: auto;
   position: relative; /* Ensures child absolute positioning is relative to this container */
 }
@@ -14,7 +14,7 @@
   position: center; /* Positioning relative to the card */
   top: 10px; /* Adjust as needed */
   right: 10px; /* Adjust as needed */
-  background-color: rgba(255, 255, 255, 0.7);
+  background-color: rgba(255, 255, 255, 0);
   padding: 5px;
   border-radius: 5px;
   font-size: 1.2em;
