@@ -71,8 +71,8 @@ const CommentSection = ({ post_id, currentUser}) => {
   return (
     <div className="container mt-4">
       <button
-        className="btn btn-outline-secondary mt-3"
         onClick={() => setShowComments(!showComments)}
+        className="custom-button"
       >
         {showComments ? "Hide Comments" : "Show Comments"}
       </button>
@@ -89,9 +89,10 @@ const CommentSection = ({ post_id, currentUser}) => {
                   <small>{moment(comment.created_at).fromNow()}</small>
                   {canDeleteComment(comment.user_id) && (
                     <button
-                      className="btn btn-danger btn-sm"
                       onClick={() => handleDeleteComment(comment.comment_id)}
-                    > Delete
+                      className="custom-button"
+                    >
+                      Delete
                     </button>
                   )}
                 </div>
@@ -109,7 +110,7 @@ const CommentSection = ({ post_id, currentUser}) => {
                 placeholder="Write a comment..."
               />
               <div className="input-group-append">
-                <button className="btn btn-primary" onClick={handlePostComment}>
+                <button onClick={handlePostComment} className="custom-button">
                   Post Comment
                 </button>
               </div>

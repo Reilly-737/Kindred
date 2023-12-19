@@ -1,11 +1,11 @@
-
- import React, { useEffect, useState } from "react";
+ import React, { useEffect, useState, useContext } from "react";
  import { useNavigate, useParams } from "react-router-dom";
  import ArtworkCard from "./ArtworkCard";
  import PostCard from "./PostCard";
  import { formatDate } from "./utils";
  import { useUser } from "./UserContext";
  import { useOutletContext } from "react-router-dom";
+ import { StyleContext } from "../contextstyle/StyleContext";
 
  const UserProfile = () => {
    const { user_id } = useParams();
@@ -17,6 +17,7 @@
    const [discussionPosts, setDiscussionPosts] = useState([]);
    const [newPassword, setNewPassword] = useState("");
    const [isChangePasswordMode, setIsChangePasswordMode] = useState(false);
+   const { theme } = useContext(StyleContext);  
 
    useEffect(() => {
      console.log("Current user in UserProfile:", currentUser); // Log current user
@@ -163,69 +164,86 @@
          };
 
    return (
-     <div className="profile-container">
-       <h2>{currentUser ? `${currentUser.username}'s Profile` : "Profile"}</h2>
-       <p>{currentUser ? currentUser.bio : "No bio available"}</p>
-       {currentUser && currentUser.user_id === parseInt(user_id) && (
-         <div>
-           {isChangePasswordMode ? (
-             <div>
-               <input
-                 type="password"
-                 placeholder="New Password"
-                 value={newPassword}
-                 onChange={(e) => setNewPassword(e.target.value)}
-               />
-               <button onClick={updatePassword}>Change Password</button>
-               <button onClick={() => setIsChangePasswordMode(false)}>
-                 Cancel
+     <div
+       className="profile-container"
+       style={{ color: theme.primaryColor, backgroundColor: theme.background }}
+     >
+       <div className="profile-container">
+         <h2>
+           {currentUser ? `${currentUser.username}'s Profile` : "Profile"}
+         </h2>
+         <p>{currentUser ? currentUser.bio : "No bio available"}</p>
+         {currentUser && currentUser.user_id === parseInt(user_id) && (
+           <div>
+             {isChangePasswordMode ? (
+               <div>
+                 <input
+                   type="password"
+                   placeholder="New Password"
+                   value={newPassword}
+                   onChange={(e) => setNewPassword(e.target.value)}
+                 />
+                 <button onClick={updatePassword} className="custom-button">
+                   Change Password
+                 </button>
+                 <button
+                   onClick={() => setIsChangePasswordMode(false)}
+                   className="custom-button"
+                 >
+                   Cancel
+                 </button>
+               </div>
+             ) : (
+               <button
+                 onClick={() => setIsChangePasswordMode(true)}
+                 className="custom-button"
+               >
+                 Change Password
                </button>
-             </div>
-           ) : (
-             <button onClick={() => setIsChangePasswordMode(true)}>
-               Change Password
+             )}
+             <button onClick={deleteUserProfile} className="custom-button">
+               Delete Profile
              </button>
-           )}
-           <button onClick={deleteUserProfile}>Delete Profile</button>
+           </div>
+         )}
+         <div>
+           <div className="account-creation-date">
+             Member since: {currentUser && formatDate(currentUser.created_at)}
+           </div>
+           <h3>My Artworks</h3>
+           <div className="artworks-container">
+             {artworks.map((artwork) => (
+               <ArtworkCard
+                 key={artwork.artwork_id}
+                 {...artwork}
+                 image={artwork.image_url}
+                 username={artwork.user.username}
+                 user_id={artwork.user_id}
+                 currentUser={currentUser}
+                 onDelete={deleteArtwork}
+                 onEdit={updateArtworkTitle}
+                 onTitleUpdate={updateArtworkTitle}
+                 isProfileView={true}
+               />
+             ))}
+           </div>
          </div>
-       )}
-       <div>
-         <div className="account-creation-date">
-           Member since: {currentUser && formatDate(currentUser.created_at)}
-         </div>
-         <h3>My Artworks</h3>
-         <div className="artworks-container">
-           {artworks.map((artwork) => (
-             <ArtworkCard
-               key={artwork.artwork_id}
-               {...artwork}
-               image={artwork.image_url}
-               username={artwork.user.username}
-               user_id={artwork.user_id}
-               currentUser={currentUser}
-               onDelete={deleteArtwork}
-               onEdit={updateArtworkTitle}
-               onTitleUpdate={updateArtworkTitle}
-               isProfileView={true}
-             />
-           ))}
-         </div>
-       </div>
-       <div>
-         <h3>My Discussion Posts</h3>
-         <div className="discussion-posts-container">
-           {discussionPosts.map((post) => (
-             <PostCard
-               key={post.post_id}
-               {...post}
-               username={post.user.username}
-               currentUser={currentUser}
-               onDelete={deleteDiscussionPost}
-               onEdit={updateDiscussionPostTitle}
-               onTitleUpdate={updateDiscussionPostTitle}
-               isOnHomePage={false}
-             />
-           ))}
+         <div>
+           <h3>My Discussion Posts</h3>
+           <div className="discussion-posts-container">
+             {discussionPosts.map((post) => (
+               <PostCard
+                 key={post.post_id}
+                 {...post}
+                 username={post.user.username}
+                 currentUser={currentUser}
+                 onDelete={deleteDiscussionPost}
+                 onEdit={updateDiscussionPostTitle}
+                 onTitleUpdate={updateDiscussionPostTitle}
+                 isOnHomePage={false}
+               />
+             ))}
+           </div>
          </div>
        </div>
      </div>

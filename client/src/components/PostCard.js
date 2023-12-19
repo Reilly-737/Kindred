@@ -51,7 +51,9 @@ const PostCard = ({
                 value={editableTitle}
                 onChange={handleTitleChange}
               />
-              <button onClick={handleSave}>Save</button>
+              <button onClick={handleSave} className="custom-button">
+                Save
+              </button>
             </div>
           ) : (
             <div className="post-details">
@@ -73,8 +75,14 @@ const PostCard = ({
         </div>
         {showEditDeleteButtons && (
           <div className="post-actions">
-            <button onClick={handleEdit}>Edit</button>
-            <button onClick={handleDelete}>Delete</button>
+            <button onClick={handleEdit} className="custom-button">
+              {" "}
+              Edit
+            </button>
+            <button onClick={handleDelete} className="custom-button">
+              {" "}
+              Delete
+            </button>
           </div>
         )}
         <CommentSection post_id={post_id} currentUser={currentUser} />

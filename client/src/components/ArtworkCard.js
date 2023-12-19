@@ -56,8 +56,12 @@ const ArtworkCard = ({
             <h2>{title}</h2>
             {isCreator && isProfileView && (
               <div>
-                <button onClick={handleEdit}>Edit</button>
-                <button onClick={handleDelete}>Delete</button>
+                <button onClick={handleEdit} className="custom-button">
+                  Edit
+                </button>
+                <button onClick={handleDelete} className="custom-button">
+                  Delete
+                </button>
               </div>
             )}
           </>

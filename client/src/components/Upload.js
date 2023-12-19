@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
 import Snackbar from "@mui/material/Snackbar";
@@ -7,11 +7,13 @@ import ArtworkCard from "./ArtworkCard";
 import PostCard from "./PostCard";
 import UploadForm from "./UploadForm";
 import AlertBar from "./AlertBar";
+import { StyleContext } from "../contextstyle/StyleContext";
 
 const Upload = () => {
   const navigate = useNavigate();
   const { user, setAlertMessage, handleSnackType } = useOutletContext();
   const [tags, setTags] = useState([]);
+  const { theme } = useContext(StyleContext);
   const [uploadData, setUploadData] = useState({
     title: "",
     body: "",
@@ -113,40 +115,44 @@ const Upload = () => {
   };
 
   return (
-    <Container>
-      <Row className="mt-4">
-        <Col md={{ span: 6, offset: 3 }}>
-          <UploadForm
-            onSubmit={handleFormSubmit}
-            tags={tags}
-            showLoginAlert={showLoginAlert}
+    <Container
+      style={{ color: theme.primaryColor, backgroundColor: theme.background }}
+    >
+      <Container>
+        <Row className="mt-4">
+          <Col md={{ span: 6, offset: 3 }}>
+            <UploadForm
+              onSubmit={handleFormSubmit}
+              tags={tags}
+              showLoginAlert={showLoginAlert}
+            />
+          </Col>
+        </Row>
+        {uploadData.postType === "artwork" && uploadedId && (
+          <ArtworkCard
+            image={uploadData.image_file_path}
+            title={uploadData.title}
+            id={uploadedId}
+            tags={uploadData.tags}
           />
-        </Col>
-      </Row>
-      {uploadData.postType === "artwork" && uploadedId && (
-        <ArtworkCard
-          image={uploadData.image_file_path}
-          title={uploadData.title}
-          id={uploadedId}
-          tags={uploadData.tags}
-        />
-      )}
-      {uploadData.postType === "discussion" && uploadedId && (
-        <PostCard
-          title={uploadData.title}
-          id={uploadedId}
-          body={uploadData.body}
-          tags={uploadData.tags}
-        />
-      )}
-      {showLoginAlert && (
-        <AlertBar
-          message="Hey! Please login or sign up before uploading."
-          setAlertMessage={setAlertMessage}
-          snackType="warning"
-          handleSnackType={handleSnackType}
-        />
-      )}
+        )}
+        {uploadData.postType === "discussion" && uploadedId && (
+          <PostCard
+            title={uploadData.title}
+            id={uploadedId}
+            body={uploadData.body}
+            tags={uploadData.tags}
+          />
+        )}
+        {showLoginAlert && (
+          <AlertBar
+            message="Hey! Please login or sign up before uploading."
+            setAlertMessage={setAlertMessage}
+            snackType="warning"
+            handleSnackType={handleSnackType}
+          />
+        )}
+      </Container>
     </Container>
   );
 };

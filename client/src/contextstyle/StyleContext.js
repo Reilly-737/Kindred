@@ -4,14 +4,14 @@ import { createContext } from "react";
 export const lightTheme = {
   background:
     "radial-gradient(circle at 7.4% 45.1%, rgb(236, 206, 251) 0%, rgb(205, 237, 246) 45.1%, rgb(227, 251, 252) 78.4%, rgb(230, 247, 235) 90%)",
-  primaryColor: "#defcf9",
+  primaryColor: "000000",
   secondaryColor: "#cadefc",
  
 };
 
 export const darkTheme = {
   background: "#282c34",
-  primaryColor: "#someDarkVariant",
+  primaryColor: "#FFFFFF",
   secondaryColor: "#anotherDarkVariant",
 //add these again later
 };
