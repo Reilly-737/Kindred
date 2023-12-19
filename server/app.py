@@ -160,26 +160,35 @@ class Artworks(AuthenticatedResource):
             return {'message': str(e)}, 400
         
     def post(self):
+        import ipdb;
+        ipdb.set_trace()
         self.check_authentication()
         user_id = session['user_id']
         title = request.json.get('title')
         image_url = request.json.get('image_url')
         tags = request.json.get('tags')
+        print(request.json)
         try:
             new_artwork = Artwork(
-                title=title,
-                image_url=image_url,
-                user_id=user_id
+              title=title,
+              image_url=image_url,
+              user_id=user_id
             )
             db.session.add(new_artwork)
-            db.session.flush()
+         #  # db.session.flush()
             db.session.commit()
             for tag_id in tags:
-                tag = Tag.query.get(tag_id)
-                if  tag: 
-                    artwork_tag = ArtworkTag(artwork=new_artwork, tag=tag)
-                    db.session.add(artwork_tag)
-            db.session.commit()
+             #tag = Tag.query.get(tag_id)
+             tag = db.session.get(Tag, tag_id)
+             if  tag: 
+                import ipdb;
+                ipdb.set_trace()
+                    #post_tag = PostTag(post=new_post, tag=tag)
+                    #artwork_tag = ArtworkTag(artwork_id=new_artwork.artwork_id, tag_id=tag.tag_id)
+                artwork_tag = ArtworkTag(artwork_id=new_artwork.artwork_id, tag_id=tag_id)
+                db.session.add(artwork_tag)
+                db.session.commit()
+              
             return new_artwork.to_dict(), 201
         except Exception as e: 
             db.session.rollback()
@@ -244,7 +253,7 @@ class DiscussionPosts(AuthenticatedResource):
             return {'message': str(e)}, 400
 
     def post(self):
-        self.check_authentication()
+       # self.check_authentication()
         user_id = session['user_id']
         title = request.json.get('title')
         body = request.json.get('body')

@@ -95,7 +95,7 @@ const Upload = () => {
       if (response.ok) {
         const responseData = await response.json();
         setUploadedId(responseData.id);
-
+        console.log(responseData)
         handleSnackType("success");
         setAlertMessage("Upload successful!");
         navigate(`/profile/${user.user_id}`);

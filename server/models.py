@@ -67,11 +67,12 @@ class Artwork(db.Model, SerializerMixin):
     #tag_id = db.Column(db.Integer, db.ForeignKey('tags.tag_id'))
     # Relationships
     artwork_tags = db.relationship('ArtworkTag', back_populates='artwork', cascade="all, delete-orphan")
-    tags = association_proxy('artwork_tag', 'tag')
+    tags = association_proxy('artwork_tags', 'tag')
     user = db.relationship('User', back_populates='artworks')
     #serialization_rules = ("-artwork_tags", "-user")
-    serialize_rules = ("-user.artworks", "-artwork_tags.artwork","artwork_tags.tag.title") # exclude artworks field in user relationship
-   
+    #serialize_rules = ("-user.artworks", "-artwork_tags.artwork","artwork_tags.tag.title") # exclude artworks field in user relationship
+    serialize_only = ("artwork_id", "title", "image_url","tags.title")
+    
     @validates("image_url")
     def validate_image_url(self, _, image_url):
         if not isinstance(image_url, str):
@@ -105,8 +106,9 @@ class DiscussionPost(db.Model, SerializerMixin):
     comments = db.relationship('Comment', back_populates='discussion_post', cascade="all, delete-orphan" )
     user = db.relationship('User', back_populates='discussion_posts')
     #serialize_rule
-    serialize_rules = ("-user.discussion_posts", "-post_tags.post", "-comments.discussion_post",  "post_tags.tag.title")
+    #serialize_rules = ("-user.discussion_posts", "-post_tags.post", "-comments.discussion_post",  "post_tags.tag.title")
     #exclude discussion_posts and comments fields in user relationships
+    serialize_only = ("post_id", "title", "body","tags.title")
     
     @validates("body")
     def validate_body(self, _, body):
@@ -168,8 +170,8 @@ class ArtworkTag(db.Model, SerializerMixin):
     artwork_id = db.Column(db.Integer, db.ForeignKey('artworks.artwork_id'), primary_key=True, nullable=False)
     artwork = db.relationship('Artwork', back_populates='artwork_tags')
     tag = db.relationship('Tag', back_populates='artwork_tags')
-    #serialization rules
-    serialize_rules = ("-artwork.tag","-tag.artwork_tags") #exclude tag field in artwork relationship
+   # serialization_rules = ("-artwork.artwork_tags", "-tag.artwork_tags")
+    serialize_rules = ("-artwork.tag","-tag.artwork_tags", "-artwork", "-tag") #exclude tag field in artwork relationship
                                                             # trying -tag.artwork_tag for circular issues excluding tag field in artwork relationship  
     def __repr__(self):
         return f'<ArtworkTag(tag_id={self.tag_id}, artwork_id={self.artwork_id})>'
@@ -181,7 +183,7 @@ class PostTag(db.Model, SerializerMixin):
     post_id = db.Column(db.Integer, db.ForeignKey('discussion_posts.post_id'), primary_key=True, nullable=False)
     post = db.relationship('DiscussionPost', back_populates='post_tags')
     tag = db.relationship('Tag', back_populates='post_tags')
-   
+    #serialize_only = ("")
     #serialization rules
-    serialize_rules = ("-post.tag", "-tag.post_tags") #exclude tag field in post relationship
+    serialize_rules = ("-posts.tag", "-tag.post_tags", "-posts", "-tag") #exclude tag field in post relationship
                                                      #trying -tag.post_tags for circular issues excluding tag in post relationship
