@@ -16,28 +16,15 @@ const AboutUs = () => {
             read our terms:
           </p>
           <p>
-            Respectful Community: We cherish diversity and encourage users to
-            express themselves. However, any content that promotes
+            Respectful Community: Any content that promotes
             discrimination, hate, or harm will not be tolerated.{" "}
           </p>
           <p>
-            Originality Matters: Share your own creations or properly credit the
-            artist. Plagiarism is strictly prohibited.
+            Originality Matters: Plagiarism is strictly prohibited.
           </p>
           <p>
-            Wholesome Environment: Keep discussions and comments positive and
-            uplifting. Constructive criticism is welcome, but any form of
+            Wholesome Environment: Constructive criticism is welcome, but any form of
             bulling or harassment will result in immediate action.{" "}
-          </p>
-          <p>
-            Safe and Sensitive Content: Art can be powerful, but explicit or
-            sensitive content must be appropriately marked. Respect the comfort
-            levels of the community.{" "}
-          </p>
-          <p>
-            Moderation Policies: Our moderators work diligently to maintain a
-            safe space. Any content that violates our terms will be removed.
-            Repeat offenses may result in account suspension.
           </p>
           <p>
             Privacy and Data Protection: We value your privacy. Do not share
@@ -68,8 +55,7 @@ const AboutUs = () => {
             being are acts of performance art, and everyone has a canvas to
             contribute to the masterpiece of existence. Join us at Kindred,
             where every brushstroke, sculpture, or performance is a step towards
-            fostering a community that appreciates the essence of artistic
-            expression.
+            fostering a community that appreciates artistic expression.
           </p>
           <img
             src="https://i.imgur.com/dPAXC9U.jpg"

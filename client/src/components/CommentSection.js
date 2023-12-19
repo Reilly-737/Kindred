@@ -64,60 +64,61 @@ const CommentSection = ({ post_id, currentUser}) => {
         console.error("Error deleting comment:", error);
       }
     };
-
+      const canDeleteComment = (commentUserId) => {
+        return currentUser && currentUser.user_id === commentUserId;
+      };
 
   return (
-  <div className="container mt-4">
-    <button
-      className="btn btn-outline-secondary mt-3"
-      onClick={() => setShowComments(!showComments)}
-    >
-      {showComments ? "Hide Comments" : "Show Comments"}
-    </button>
-
-    {showComments && (
-      <>
-        <h2 className="mt-4">Comments</h2>
-        <div className="list-group">
-          {comments.length > 0 ? (
-            comments.map((comment) => (
-              <div key={comment.comment_id} className="list-group-item">
-                <p className="mb-1">
-                  <strong>{comment.user?.username}:</strong> {comment.content}
-                </p>
-                <small>{moment(comment.created_at).fromNow()}</small>
-                {currentUser === comment.user_id && (
-                  <button
-                    className="btn btn-danger btn-sm"
-                    onClick={() => handleDeleteComment(comment.comment_id)}
-                  >
-                    Delete
-                  </button>
-                )}
-              </div>
-            ))
-          ) : (
-            <p className="text-muted">No comments yet.</p>
-          )}
-        </div>
-
-        <div className="input-group mt-4">
-          <textarea
-            className="form-control"
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            placeholder="Write a comment..."
-          />
-          <div className="input-group-append">
-            <button className="btn btn-primary" onClick={handlePostComment}>
-              Post Comment
-            </button>
+    <div className="container mt-4">
+      <button
+        className="btn btn-outline-secondary mt-3"
+        onClick={() => setShowComments(!showComments)}
+      >
+        {showComments ? "Hide Comments" : "Show Comments"}
+      </button>
+      {showComments && (
+        <>
+          <h2 className="mt-4">Comments</h2>
+          <div className="list-group">
+            {comments.length > 0 ? (
+              comments.map((comment) => (
+                <div key={comment.comment_id} className="list-group-item">
+                  <p className="mb-1">
+                    <strong>{currentUser.user_id.username}:</strong> {comment.content}
+                  </p>
+                  <small>{moment(comment.created_at).fromNow()}</small>
+                  {currentUser && currentUser.user_id === comment.user_id && (
+                    <button
+                      className="btn btn-danger btn-sm"
+                      onClick={() => handleDeleteComment(comment.comment_id)}
+                    > Delete
+                    </button>
+                  )}
+                </div>
+              ))
+            ) : (
+              <p className="text-muted">No comments yet.</p>
+            )}
           </div>
-        </div>
-      </>
-    )}
-  </div>
-);
+          {currentUser && (
+            <div className="input-group mt-4">
+              <textarea
+                className="form-control"
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                placeholder="Write a comment..."
+              />
+              <div className="input-group-append">
+                <button className="btn btn-primary" onClick={handlePostComment}>
+                  Post Comment
+                </button>
+              </div>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
 };
 
 export default CommentSection;

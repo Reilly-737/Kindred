@@ -19,8 +19,8 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config["SQLALCHEMY_ECHO"] = True
-app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7)
-app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+#app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7)
+app.config['SESSION_COOKIE_SAMESITE'] = 'lax'
 #app.config['SESSION_COOKIE_SECURE'] = True 
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.json.compact = False

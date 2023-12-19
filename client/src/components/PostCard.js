@@ -75,7 +75,7 @@ const PostCard = ({
           <button onClick={handleDelete}>Delete</button>
         </div>
       )}
-      <CommentSection post_id={post_id} currentUser={currentUser.user_id} />
+      <CommentSection post_id={post_id} currentUser={currentUser} />
      
     </div>
   );
