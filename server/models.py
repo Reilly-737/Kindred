@@ -71,7 +71,7 @@ class Artwork(db.Model, SerializerMixin):
     user = db.relationship('User', back_populates='artworks')
     #serialization_rules = ("-artwork_tags", "-user")
     #serialize_rules = ("-user.artworks", "-artwork_tags.artwork","artwork_tags.tag.title") # exclude artworks field in user relationship
-    serialize_only = ("artwork_id", "title", "image_url","tags.title", "user.username")
+    serialize_only = ("artwork_id", "title", "image_url","tags.title", "user.username", "user_id")
     
     @validates("image_url")
     def validate_image_url(self, _, image_url):
@@ -108,7 +108,7 @@ class DiscussionPost(db.Model, SerializerMixin):
     #serialize_rule
     #serialize_rules = ("-user.discussion_posts", "-post_tags.post", "-comments.discussion_post",  "post_tags.tag.title")
     #exclude discussion_posts and comments fields in user relationships
-    serialize_only = ("post_id", "title", "body","tags.title", "user.username")
+    serialize_only = ("post_id", "title", "body","tags.title", "user.username", "user_id")
     
     @validates("body")
     def validate_body(self, _, body):
