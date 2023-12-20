@@ -330,8 +330,14 @@ api.add_resource(DiscussionPostDetail, '/discussion-posts/<int:post_id>')
 class CommentsByPostId(AuthenticatedResource):
     def get(self, post_id):
         try:
-            comments = db.session.query(Comment).filter(Comment.post_id == post_id).all()
-            comments_data = [self.convert_to_dict(comment) for comment in comments]
+            comments = db.session.query(Comment, User.username).join(User).filter(Comment.post_id == post_id).all()
+            comments_data = [{'comment_id': comment.comment_id,
+                              'content': comment.content,
+                              'created_at': comment.created_at.isoformat(),
+                              'user_id': comment.user_id,
+                              'username': username,
+                              'post_id': comment.post_id}
+                             for comment, username in comments]
             return {'comments': comments_data}, 200
         except Exception as e:
             return {'error': str(e)}, 500

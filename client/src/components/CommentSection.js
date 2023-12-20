@@ -43,6 +43,7 @@ const CommentSection = ({ post_id, currentUser}) => {
          throw new Error("Failed to post comment");
        }
        const newCommentData = await response.json();
+       newCommentData.username = currentUser.username;
        setComments([...comments, newCommentData]);
        setNewComment("");
      } catch (error) {

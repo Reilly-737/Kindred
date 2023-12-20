@@ -10,10 +10,10 @@ export const lightTheme = {
 };
 
 export const darkTheme = {
-  background: "#282c34",
+  background: "linear-gradient(to top, #6643b5 0%, #430f58 100%)",
   primaryColor: "#FFFFFF",
-  secondaryColor: "#anotherDarkVariant",
-//add these again later
+  secondaryColor: "#6643b5",
+  //add these again later
 };
 
 export const StyleContext = createContext({
