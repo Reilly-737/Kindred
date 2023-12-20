@@ -62,7 +62,7 @@ const PostCard = ({
                 Tags:{" "}
                 {post_tags && post_tags.length > 0
                   ? post_tags.map((tag) => tag.tag.title).join(", ")
-                  : "No tags"}
+                  : "Missing Tags"}
               </div>
               <div className="post-body">{body}</div>
             </div>

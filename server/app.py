@@ -160,8 +160,6 @@ class Artworks(AuthenticatedResource):
             return {'message': str(e)}, 400
         
     def post(self):
-        import ipdb;
-        ipdb.set_trace()
         self.check_authentication()
         user_id = session['user_id']
         title = request.json.get('title')
@@ -181,8 +179,6 @@ class Artworks(AuthenticatedResource):
              #tag = Tag.query.get(tag_id)
              tag = db.session.get(Tag, tag_id)
              if  tag: 
-                import ipdb;
-                ipdb.set_trace()
                     #post_tag = PostTag(post=new_post, tag=tag)
                     #artwork_tag = ArtworkTag(artwork_id=new_artwork.artwork_id, tag_id=tag.tag_id)
                 artwork_tag = ArtworkTag(artwork_id=new_artwork.artwork_id, tag_id=tag_id)
@@ -253,7 +249,7 @@ class DiscussionPosts(AuthenticatedResource):
             return {'message': str(e)}, 400
 
     def post(self):
-       # self.check_authentication()
+        self.check_authentication()
         user_id = session['user_id']
         title = request.json.get('title')
         body = request.json.get('body')
