@@ -134,7 +134,7 @@ class Login(Resource):
                 session['user_id'] = user.user_id
                 session.permanent = True
                 print("Login successful")
-                return {'message': 'Login successful', 'user_id': user.user_id}, 200
+                return user.to_dict(), 200
 
             print("Invalid credentials")
             return {'message': 'Invalid Credentials'}, 403

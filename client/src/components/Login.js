@@ -31,7 +31,7 @@ const Login = () => {
           resp.json()
             .then((userObj) => {
               console.log("Login successful, user object:", userObj); // Log user object
-              updateUser({ user_id: userObj.user_id });
+              updateUser(userObj);
               navigate(`/profile/${userObj.user_id}`);
               //handleSnackType("success");
               //setAlertMessage("Welcome back!");

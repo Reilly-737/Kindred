@@ -7,6 +7,7 @@ const ArtworkCard = ({
   image,
   title,
   artwork_tags,
+  tags,
   username,
   user_id,
   onDelete,

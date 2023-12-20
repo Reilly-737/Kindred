@@ -60,7 +60,7 @@ const FormComp = ({ mode = "signup", onSubmit }) => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ ...values, ongoing: true }),
+          body: JSON.stringify({ ...values }),
         })
           .then((resp) => {
             if (resp.ok) {

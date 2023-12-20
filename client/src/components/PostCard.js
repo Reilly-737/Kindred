@@ -21,7 +21,7 @@ const PostCard = ({
   const { theme } = useContext(StyleContext);
   const { currentUser } = useUser();
   const isCreator = currentUser && currentUser.user_id === user_id;
-
+console.log(post_tags);
   const handleDelete = () => {
     onDelete(post_id);
   };
@@ -38,7 +38,7 @@ const PostCard = ({
     setEditableTitle(e.target.value);
   };
   const showEditDeleteButtons = !isOnHomePage && isCreator && !isEditMode;
-
+ 
   return (
     <div style={{ background: theme.background, color: theme.primaryColor }}>
       <div className="post-card-container">
@@ -60,9 +60,11 @@ const PostCard = ({
               <h2>{title}</h2>
               <div className="post-tags">
                 Tags:{" "}
-                {post_tags && post_tags.length > 0
-                  ? post_tags.map((tag) => tag.tag.title).join(", ")
-                  : "Missing Tags"}
+                <span>
+                  {post_tags && post_tags.length > 0
+                    ? post_tags.map((post_tag) => post_tag.tag.title).join(", ")
+                    : "No tags"}
+                </span>
               </div>
               <div className="post-body">{body}</div>
             </div>
@@ -92,3 +94,7 @@ const PostCard = ({
 };
 
 export default PostCard;
+//  post_tags.map((postTag) => (
+//                          <span key={post_tags.id}>{postTag.tag.title}</span>
+//                       )).join(", ")
+                  

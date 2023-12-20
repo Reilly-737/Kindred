@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  
   width: 100%;
 }
 .bottom-container {
@@ -15,6 +16,12 @@
   width: 50%; /* Half the width of the container */
   height: 600px;
   overflow-y: auto; /* Enables scrolling */
+}
+.artist-cards .artwork-card {
+  max-width: 350px; /* Increase the max width */
+  min-width: 250px; /* Increase the min width */
+  font-size: 1rem; /* Adjust the font size as needed */
+  align-items: center;
 }
 
 @media (max-width: 768px) {

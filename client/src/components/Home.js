@@ -119,6 +119,7 @@ const Home = () => {
                 key={discussion.post_id}
                 id={discussion.post_id}
                 username={discussion.user.username}
+                post_tags={discussion.post_tags}
                 {...discussion}
                 isOnHomePage={true}
               />

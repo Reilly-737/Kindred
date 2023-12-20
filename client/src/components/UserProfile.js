@@ -170,10 +170,10 @@
      >
        <div className="profile-container">
          <h2>
-           {currentUser ? `${currentUser.username}'s Profile` : "Profile"}
+           {user ? `${user.username}'s Profile` : "Profile"}
          </h2>
-         <p>{currentUser ? currentUser.bio : "No bio available"}</p>
-         {currentUser && currentUser.user_id === parseInt(user_id) && (
+         <p>{user ? user.bio : "No bio available"}</p>
+         {user && user.user_id === parseInt(user_id) && (
            <div>
              {isChangePasswordMode ? (
                <div>
