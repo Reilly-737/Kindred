@@ -76,6 +76,12 @@ const Home = () => {
   return (
     <div>
       <h1>Welcome to Kindred!</h1>
+      <p>
+        {" "}
+        Explore and connect over stunning artwork and engaging discussions in
+        our creative community. We're delighted to have you on this artistic
+        journey!
+      </p>
       <div className="home-container">
         <div>
           <h2>Our New Artists!</h2>

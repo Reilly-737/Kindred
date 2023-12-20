@@ -2,35 +2,44 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  
+  align-items: center;
   width: 100%;
 }
 .bottom-container {
+  display: none; /* Hide bottom-container if it's not in use */
+}
+
+.top-sections-container {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  width: 100%;
+  justify-content: space-around; /* Adjusts the space between the two sections */
+  align-items: flex-start; /* Aligns items to the start of the container */
+}
+
+.latest-artwork, .latest-discussions {
+  width: 45%; /* Each takes up less than half the space to fit side by side */
+  /* Add other styles like margin or padding as needed */
 }
 
 .artwork-cards, .discussion-cards {
-  width: 50%; /* Half the width of the container */
   height: 600px;
-  overflow-y: auto; /* Enables scrolling */
+  overflow-y: auto;
+  margin-bottom: 20px; /* Space below these sections */
 }
-.artist-cards .artwork-card {
-  max-width: 350px; /* Increase the max width */
-  min-width: 250px; /* Increase the min width */
-  font-size: 1rem; /* Adjust the font size as needed */
-  align-items: center;
+
+.artwork-card, .post-card {
+  max-width: 100%; /* Allow cards to fill the container */
+  min-width: 200px; /* Minimum width for cards */
+  margin-bottom: 20px;
+  /* ... other styles ... */
 }
 
 @media (max-width: 768px) {
-  .home-container {
+  .top-sections-container {
     flex-direction: column;
+    align-items: center;
   }
 
-  .artwork-cards, .discussion-cards {
+  .latest-artwork, .latest-discussions {
     width: 100%; /* Full width on smaller screens */
   }
 }
-
