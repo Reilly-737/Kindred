@@ -12,6 +12,7 @@ We've integrated Cloudinary API in our Upload feature, allowing users' artwork t
 
 Installation and Setup
 (Provide detailed steps here)
+//add more here!!!!!!!
 
 Starting the Application
 To start Kindred:
@@ -31,17 +32,81 @@ Start the React application: npm start
 Access the application in your web browser at localhost:3000
 
 Using the Application
-(Description of how to use the app, register, post artwork, etc.)
-//add more here
+
+Intial Experiance and Home Page
+  Landing on the Home Page: Upon opening Kindred, youre greeted with the home page showcasing artwork and discussion posts by other users.
+  Exploring Content: Click on 'View One' to see individual discussion posts in detail. Navigate back to the home page to continue exploring.
+  
+Signing Up
+  Registration Porcess: To interact further, sign up by providing an email, username, bio and password.
+  Post-Registration: After signing up, youre directed to the upload page, where you can make your first post.
+  
+Making a Post
+  Creating Art Posts: Choose Artwork to upload artwork. Fill in a title, select an image from your files and pick a tag.
+  Creating Discussion Posts: Choose to make a discussion post by entering a title, body text and pick a tag.
+  Post Submission: Upon submission, you'll be redirected to your profile, where you can view your posts and profile information.
+  
+Profile Management
+  Profile Features: Change your password or delete your account from your profile page.
+  Managing Own Content: On your profile, you have the option to edit or delete your artwork and discussion posts
+  Navigating Back to Home: Click on the 'Kindred' name to return to the home page.
+  
+Additional Features
+  About Page: Learn about Kindred's rules and the creators information on the About page.
+  Search Functionality: Use the search bar to find users, artworks, and discussion posts by name or tag.
+  Interacting with Posts: When logged in, comment on and delete your comments on discussion posts. 
+
+//add loom video or pictures
 
 API Routes and Endpoints
-(Description of API routes with methods, parameters, and responses)
-//add more here
+Kindred's API provided varoius endpoints to interact with the application:
 
+  User Endpoints:
+  - '/users':Retrieves a list of users
+  - '/users/<int:user_id>': GET, PATCH or DELETE a specific user by ID
+    
+ Artwork Endpoints:
+  -'/artworks': GET all artworks and POST new artwork by users
+  -'/artworks/<int:artwork_id>': GET specific information about an artwork piece, PATCH update artwork details, DELETE remove an artwork form from platform
+
+ Discussion Post Endpoints:
+   -'/discussion-posts': GET all discussion posts made by users, POST new discussion post by users
+   -'/discussion-posts/int:post_id>': GET specific discussion posts, PATCH edit title of discussion post, DELETE a discussion post
+   
+ Login/Logout Endpoints:
+   -'/login': Handle user authenication for login
+   -'/logout': Handle user logout
+   
+ Sign up Endpoint:
+   -'/register': Allow new users to register on Kindred
+   
+ Comment Endpoints:
+   -'/discussion-post/<int:post_id>/comments': GET all comments associated with specific discussion post, POST allow users to add a new comment 
+   -'/comments/int:<int:comment_id>': DELETE a specific comment from a discussion post by the user who made the comment
+   
+ Tag Endpoints:
+   -'/tags': GET list of tags available on Kindred each tag can be assoicated with artworks and discussion posts
+   
+ Search Endpoints:
+   -'/search': Conducts a comperhensive search across the platform.
+ 
 Database Models
-(Descriptions of User, Artwork, DiscussionPost, Tag, Comment, ArtworkTag, PostTag models)
-//add more here
+
+  Kindred uses several models to manage its data:
+  
+  User: Manages user data including username, email, bio, artworks and discussion posts.
+  Artwork: Represensts artworks with titles, image URLS and assoicated tags
+  Discussion Post: Handles discussion posts with titles, bodies and realted comments
+  Tag: Used for categorizing tags for filtering tags for artworks and discussion posts
+  Comment: Manages comments on discussion posts
+  Artwork Tag: An association table for Artwork and Tag for tag management
+  Post Tag: An association table for Discussion Post and Tag for tag management
 
 Future Enhancements
-We plan to introduce features like artist following, collaboration requests, messaging, and a monthly newsletter that highlights a charity.
 
+  We plan to introduce features like artist following, collaboration requests, messaging, and a monthly newsletter that highlights a charity.
+
+Acknowledgments 
+
+  This project was completed by me, Reilly Wentz, as a culmination of the skills I acquired from the Flatiron curriculum and my personal research. 
+I would like to extend my deepest gratitude to my fellow cohort members for their support and camaraderie throughout this journey. A special thank you to my instructors Morgan Vanyperen and Matteo Piccini, for their invaluable guidance and patience in helping me troubleshoot and debug various challenges. Their expertise and encouragement were pivotal in the successful completion of Kindred and my time at Flatiron. 
