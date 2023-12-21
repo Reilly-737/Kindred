@@ -11,6 +11,14 @@ Welcome to Kindred, an artist-friendly platform created as a safe space for user
   Bcrypt for secure password handling, and .env for environment configuration. Additional functionalities include Snackbars for notifications, useOutletContext 
   for component communication, CORS for resource sharing, and Session for maintaining user state.
 
+## **Table Of Contents**
+
+- [Installation and Starting the Application](#installation-and-starting-the-application)
+- [Using the Application](#using-the-application)
+- [Api Routes and Endpoints](#api-routes-and-endpoints)
+- [Database Models](#database-models)
+
+
 ## **New Feature: Cloudinary Integration**
 
 We've integrated Cloudinary API in our Upload feature, allowing users' artwork to be saved securely and efficiently in the cloud.
