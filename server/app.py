@@ -7,7 +7,7 @@ from flask import jsonify
 from sqlalchemy.orm.exc import NoResultFound
 from flask_bcrypt import Bcrypt
 from sqlalchemy import or_
-
+from flask import render_template
 from config import app, db
 api = Api(app)
 bcrypt = Bcrypt(app)
@@ -23,6 +23,14 @@ from models import PostTag
 @app.route('/')
 def index():
     return '<h1>The Project Server</h1>'
+
+@app.route('/')
+@app.route('/productions/<int:id>')
+@app.route('/productions/<int:id>/edit')
+@app.route('/productions/new')
+def index(id=0):
+    return render_template("index.html")
+
 class AuthenticatedResource(Resource):
     def check_authentication(self):
         if 'user_id' not in session:
@@ -472,3 +480,5 @@ api.add_resource(SearchAPI, '/search')
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
+   # from waitress import serve
+    #serve(app, host='0.0.0.0, port=5555')
