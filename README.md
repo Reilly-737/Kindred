@@ -34,7 +34,7 @@ Paste the code after 'APP_SECRET=' in the .env file and exit the shell with Ctrl
 Database Setup:
 
 Navigate to the server directory: 'cd server'
-Run 'flask db init', 'flask db migrate -m "initial migration", and 'flask db upgrade' to create and configure teh database.
+Run 'flask db init', 'flask db migrate -m "initial migration", and 'flask db upgrade' to create and configure the database.
 
 Start the Backend Server:
 Run 'python app.py' to start the Flask server
@@ -43,7 +43,18 @@ Frontend Setup:
 
 Frontend Environment Configuration:
 
-//continue here!!!! 
+In a second terminal window, navigate to the client directory: 'cd client'.
+Create a '.env' file in the client directory for Cloudinary configuration.
+    'REACT_APP_CLOUDINARY_URL=your_cloudinary-url'
+ Replace 'your_cloudinary_url' with your actual Cloudinary URL.
+ 
+Install and Start Frontend:
+
+Navigate to the frontend directory: cd client
+Install the necessary Node packages: npm install
+Start the React application: npm start
+Access the application in your web browser at localhost:3000
+
 
 Install and Start Frontend:
 
@@ -54,17 +65,17 @@ Access the application in your web browser at localhost:3000
 
 Using the Application
 
-Intial Experiance and Home Page
-  Landing on the Home Page: Upon opening Kindred, youre greeted with the home page showcasing artwork and discussion posts by other users.
+Initial Experiance and Home Page
+  Landing on the Home Page: Upon opening Kindred, you are greeted with the home page showcasing artwork and discussion posts by other users.
   Exploring Content: Click on 'View One' to see individual discussion posts in detail. Navigate back to the home page to continue exploring.
   
 Signing Up
-  Registration Porcess: To interact further, sign up by providing an email, username, bio and password.
-  Post-Registration: After signing up, youre directed to the upload page, where you can make your first post.
+  Registration Process: To interact further, sign up by providing an email, username, bio and password.
+  Post-Registration: After signing up, you're directed to the upload page, where you can make your first post.
   
 Making a Post
-  Creating Art Posts: Choose Artwork to upload artwork. Fill in a title, select an image from your files and pick a tag.
-  Creating Discussion Posts: Choose to make a discussion post by entering a title, body text and pick a tag.
+  Creating Art Posts: Choose Artwork to upload artwork. Fill in a title, select an image from your files and picking a tag.
+  Creating Discussion Posts: Choose to make a discussion post by entering a title, body text and picking a tag.
   Post Submission: Upon submission, you'll be redirected to your profile, where you can view your posts and profile information.
   
 Profile Management
@@ -77,10 +88,10 @@ Additional Features
   Search Functionality: Use the search bar to find users, artworks, and discussion posts by name or tag.
   Interacting with Posts: When logged in, comment on and delete your comments on discussion posts. 
 
-//add loom video or pictures
+//add loom video or pictures here!
 
 API Routes and Endpoints
-Kindred's API provided varoius endpoints to interact with the application:
+Kindred's API provided various endpoints to interact with the application:
 
   User Endpoints:
   - '/users':Retrieves a list of users
@@ -95,7 +106,7 @@ Kindred's API provided varoius endpoints to interact with the application:
    -'/discussion-posts/int:post_id>': GET specific discussion posts, PATCH edit title of discussion post, DELETE a discussion post
    
  Login/Logout Endpoints:
-   -'/login': Handle user authenication for login
+   -'/login': Handle user authentication for login
    -'/logout': Handle user logout
    
  Sign up Endpoint:
@@ -106,18 +117,18 @@ Kindred's API provided varoius endpoints to interact with the application:
    -'/comments/int:<int:comment_id>': DELETE a specific comment from a discussion post by the user who made the comment
    
  Tag Endpoints:
-   -'/tags': GET list of tags available on Kindred each tag can be assoicated with artworks and discussion posts
+   -'/tags': GET list of tags available on Kindred each tag can be associated with artworks and discussion posts
    
  Search Endpoints:
-   -'/search': Conducts a comperhensive search across the platform.
+   -'/search': Conducts a comprehensive search across the platform.
  
 Database Models
 
   Kindred uses several models to manage its data:
   
   User: Manages user data including username, email, bio, artworks and discussion posts.
-  Artwork: Represensts artworks with titles, image URLS and assoicated tags
-  Discussion Post: Handles discussion posts with titles, bodies and realted comments
+  Artwork: Represents artworks with titles, image URLS and associated tags
+  Discussion Post: Handles discussion posts with titles, bodies and related comments
   Tag: Used for categorizing tags for filtering tags for artworks and discussion posts
   Comment: Manages comments on discussion posts
   Artwork Tag: An association table for Artwork and Tag for tag management
