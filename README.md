@@ -10,22 +10,43 @@ Kindred combines a powerful backend built with Flask and SQLAlchemy with a respo
 New Feature: Cloudinary Integration
 We've integrated Cloudinary API in our Upload feature, allowing users' artwork to be saved securely and efficiently in the cloud.
 
-Installation and Setup
-(Provide detailed steps here)
-//add more here!!!!!!!
 
-Starting the Application
+Installation and Starting the Application
 To start Kindred:
+Fork and clone this repository and clone it to your local machine. The open it in your favorite code editor. 
 
 Backend Setup:
 
+Install Python Packages:
 Navigate to the backend directory: cd server
 Install the necessary Python packages: pipenv install
 Activate the virtual environment: pipenv shell
-Set up the database: flask db upgrade
-Start the Flask server: flask run
+
+Environment Configuration:
+ Run 'touch .env' in the main directory to create a new '.env' file.
+ Open the '.env' file and insert the following: 
+   FLASK_RUN_PORT=5555
+   APP_SECRET =
+Enter Flask shell: 'flask shell'
+Run 'import secrets' followed by 'secrets.token_hex(32)'. Copy the output code.
+Paste the code after 'APP_SECRET=' in the .env file and exit the shell with Ctrl-D.
+
+Database Setup:
+
+Navigate to the server directory: 'cd server'
+Run 'flask db init', 'flask db migrate -m "initial migration", and 'flask db upgrade' to create and configure teh database.
+
+Start the Backend Server:
+Run 'python app.py' to start the Flask server
 
 Frontend Setup:
+
+Frontend Environment Configuration:
+
+//continue here!!!! 
+
+Install and Start Frontend:
+
 Navigate to the frontend directory: cd client
 Install the necessary Node packages: npm install
 Start the React application: npm start
