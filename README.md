@@ -104,7 +104,9 @@ Additional Features
   - Search Functionality: Use the search bar to find users, artworks, and discussion posts by name or tag.
   - Interacting with Posts: When logged in, comment on and delete your comments on discussion posts. 
 
-//add loom video or pictures here!
+![Example Image](![image](https://github.com/Reilly-737/Kindred/assets/105329726/ae847578-d8e0-4d65-bb15-6a798c6f21b1)
+)
+
 
 ## **API Routes and Endpoints**
 
