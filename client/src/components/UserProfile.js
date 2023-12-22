@@ -25,7 +25,7 @@
        fetchArtworks();
        fetchDiscussionPosts();
      }
-   }, [user_id, user, currentUser, fetchArtworks, fetchDiscussionPosts]);
+   }, [user_id, user]);
 
    const fetchArtworks = () => {
      fetch("/artworks")

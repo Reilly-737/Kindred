@@ -35,7 +35,7 @@ export const UserProvider = ({ children }) => {
 
   useEffect(() => {
     checkCurrentUser();
-  }, [checkCurrentUser]);
+  }, []);
 
   return (
     <UserContext.Provider value={{ currentUser, setUser }}>
