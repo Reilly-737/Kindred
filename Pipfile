@@ -16,6 +16,6 @@ faker = "*"
 sqlalchemy = "*"
 waitress = "*"
 psycopg2 = "*"
-
+gunicorn = "*"
 [requires]
 python_full_version = "3.8.13"

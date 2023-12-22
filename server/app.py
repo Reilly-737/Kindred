@@ -20,9 +20,7 @@ from models import Comment
 from models import ArtworkTag
 from models import PostTag
 
-@app.route('/')
-def index():
-    return '<h1>The Project Server</h1>'
+
 
 @app.route('/')
 @app.route('/productions/<int:id>')

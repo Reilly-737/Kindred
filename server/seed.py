@@ -50,34 +50,34 @@ def seed_tags():
         db.session.commit()
         print("Tags seeded!")
 
-def seed_artwork():
-    predefined_created_at = datetime.utcnow() - timedelta(days=5)  
-    artwork_data = [
-        {
-            'title': 'The Odd Dream on A Distant Planet',
-            'image_url': 'https://i.imgur.com/1crvAUE_d.jpg?maxwidth=520&shape=thumb&fidelity=high',
-            'user_id': 1,
-            'created_at': predefined_created_at,
-        },
-        {
-            'title': 'Feeling A Growth Inside',
-            'image_url': 'https://i.imgur.com/igP7cBA_d.jpg?maxwidth=520&shape=thumb&fidelity=high',
-            'user_id': 2,
-            'created_at': predefined_created_at,
-        },
-        {
-            'title': 'The Pout',
-            'image_url': 'https://i.imgur.com/b6P0PSw_d.jpg?maxwidth=520&shape=thumb&fidelity=high',
-            'user_id': 3,
-            'created_at': predefined_created_at,
-        },
-        # Add more artwork entries as needed
-    ]
-    for data in artwork_data:
-        artwork = Artwork(**data)
-        db.session.add(artwork)
-    db.session.commit()
-    print("Artworks seeded!")
+# def seed_artwork():
+#     predefined_created_at = datetime.utcnow() - timedelta(days=5)  
+#     artwork_data = [
+#         {
+#             'title': 'The Odd Dream on A Distant Planet',
+#             'image_url': 'https://i.imgur.com/1crvAUE_d.jpg?maxwidth=520&shape=thumb&fidelity=high',
+#             'user_id': 1,
+#             'created_at': predefined_created_at,
+#         },
+#         {
+#             'title': 'Feeling A Growth Inside',
+#             'image_url': 'https://i.imgur.com/igP7cBA_d.jpg?maxwidth=520&shape=thumb&fidelity=high',
+#             'user_id': 2,
+#             'created_at': predefined_created_at,
+#         },
+#         {
+#             'title': 'The Pout',
+#             'image_url': 'https://i.imgur.com/b6P0PSw_d.jpg?maxwidth=520&shape=thumb&fidelity=high',
+#             'user_id': 3,
+#             'created_at': predefined_created_at,
+#         },
+#         # Add more artwork entries as needed
+#     ]
+#     for data in artwork_data:
+#         artwork = Artwork(**data)
+#         db.session.add(artwork)
+#     db.session.commit()
+#     print("Artworks seeded!")
 
 if __name__ == '__main__':
     fake = Faker()
@@ -85,6 +85,5 @@ if __name__ == '__main__':
         clear_tables()
         seed_users()
         seed_tags()
-        seed_artwork()
         print("Starting seed...")
         # Seed code goes here!
