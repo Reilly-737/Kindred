@@ -78,31 +78,31 @@ Install and Start Frontend:
 
 Initial Experiance and Home Page
 
-  Landing on the Home Page: Upon opening Kindred, you are greeted with the home page showcasing artwork and discussion posts by other users.
-  Exploring Content: Click on 'View One' to see individual discussion posts in detail. Navigate back to the home page to continue exploring.
+  - Landing on the Home Page: Upon opening Kindred, you are greeted with the home page showcasing artwork and discussion posts by other users.
+  - Exploring Content: Click on 'View One' to see individual discussion posts in detail. Navigate back to the home page to continue exploring.
   
 Signing Up
 
-  Registration Process: To interact further, sign up by providing an email, username, bio and password.
-  Post-Registration: After signing up, you're directed to the upload page, where you can make your first post.
+  - Registration Process: To interact further, sign up by providing an email, username, bio and password.
+  - Post-Registration: After signing up, you're directed to the upload page, where you can make your first post.
   
 Making a Post
 
-  Creating Art Posts: Choose Artwork to upload artwork. Fill in a title, select an image from your files and picking a tag.
-  Creating Discussion Posts: Choose to make a discussion post by entering a title, body text and picking a tag.
-  Post Submission: Upon submission, you'll be redirected to your profile, where you can view your posts and profile information.
+  - Creating Art Posts: Choose Artwork to upload artwork. Fill in a title, select an image from your files and picking a tag.
+  - Creating Discussion Posts: Choose to make a discussion post by entering a title, body text and picking a tag.
+  - Post Submission: Upon submission, you'll be redirected to your profile, where you can view your posts and profile information.
   
 Profile Management
 
-  Profile Features: Change your password or delete your account from your profile page.
-  Managing Own Content: On your profile, you have the option to edit or delete your artwork and discussion posts
-  Navigating Back to Home: Click on the 'Kindred' name to return to the home page.
+  - Profile Features: Change your password or delete your account from your profile page.
+  - Managing Own Content: On your profile, you have the option to edit or delete your artwork and discussion posts
+  - Navigating Back to Home: Click on the 'Kindred' name to return to the home page.
   
 Additional Features
 
-  About Page: Learn about Kindred's rules and the creators information on the About page.
-  Search Functionality: Use the search bar to find users, artworks, and discussion posts by name or tag.
-  Interacting with Posts: When logged in, comment on and delete your comments on discussion posts. 
+  - About Page: Learn about Kindred's rules and the creators information on the About page.
+  - Search Functionality: Use the search bar to find users, artworks, and discussion posts by name or tag.
+  - Interacting with Posts: When logged in, comment on and delete your comments on discussion posts. 
 
 //add loom video or pictures here!
 
