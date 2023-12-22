@@ -1,17 +1,14 @@
 import React, { useState } from "react";
 import "./ArtworkCard.css";
-import { Link } from "react-router-dom";
 import { useUser } from "./UserContext";
 const ArtworkCard = ({
   artwork_id,
   image,
   title,
   artwork_tags,
-  tags,
   username,
   user_id,
   onDelete,
-  onEdit,
   onTitleUpdate,
   isProfileView,
 }) => {

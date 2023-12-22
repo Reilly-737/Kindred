@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
-import Snackbar from "@mui/material/Snackbar";
-import MuiAlert from "@mui/material/Alert";
 import ArtworkCard from "./ArtworkCard";
 import PostCard from "./PostCard";
 import UploadForm from "./UploadForm";
@@ -14,7 +12,7 @@ const Upload = () => {
   const { user, setAlertMessage, handleSnackType } = useOutletContext();
   const [tags, setTags] = useState([]);
   const { theme } = useContext(StyleContext);
-  const [uploadData, setUploadData] = useState({
+  const [uploadData] = useState({
     title: "",
     body: "",
     image_url: "",

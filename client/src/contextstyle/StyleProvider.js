@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { StyleContext, lightTheme, darkTheme} from "./StyleContext";
 
 export const StyleProvider = ({ children }) => {

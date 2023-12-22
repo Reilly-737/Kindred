@@ -3,7 +3,7 @@ import FormComp from './Form';
 import {Container, Row, Col } from 'reactstrap';
 
 const Signup = () => {
-    const [isSubmitted, setIsSubmitted] = useState(false)
+    const [setIsSubmitted] = useState(false)
 
     const handleFormSubmit =() => {
         //logic here for confetti

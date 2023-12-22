@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import ArtworkCard from "./ArtworkCard";
 import PostCard from "./PostCard";
 import "./Home.css";

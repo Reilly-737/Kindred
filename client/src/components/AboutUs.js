@@ -8,7 +8,6 @@ const AboutUs = () => {
   return (
     <Container
       style={{ color: theme.primaryColor, backgroundColor: theme.background }}>
-      <h1 style={{ color: theme.secondaryColor }}></h1>
       <Container>
         <h1>about us</h1>
 
